@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/editTextHost"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:hint="@string/editTextHost"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/editTextPort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/editTextPort"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/editTextLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/editTextLogin"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/editTextPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4sp"
+            android:hint="@string/editTextPass"
+            android:inputType="textPassword" />
+
+        <CheckBox
+            android:id="@+id/checkBoxFollowSystemDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:checked="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:text="@string/checkBoxFollowSystemDarkMode" />
+
+        <CheckBox
+            android:id="@+id/checkBoxLightTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:checked="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:text="@string/checkBoxLightTheme" />
+
+        <CheckBox
+            android:id="@+id/checkBoxCopyToClipboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:checked="false"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:text="@string/checkBoxCopyToClipboard" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPreviewLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4sp"
+            android:checked="false"
+            android:clickable="true"
+            android:enabled="true"
+            android:text="@string/checkBoxPreviewLink"
+            android:focusable="true" />
+
+
+        <TableRow
+            android:id="@+id/buttonsRow"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/buttonSaveSettings"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4sp"
+                android:layout_weight="2"
+                android:onClick="onClick"
+                android:text="@string/buttonSaveSettings"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/buttonCloseSettings"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4sp"
+                android:layout_weight="2"
+                android:onClick="onClick"
+                android:text="@string/buttonCloseSettings"
+                android:textAlignment="center" />
+        </TableRow>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4sp"
+            android:autoLink="web"
+            android:gravity="center_horizontal"
+            android:text="@string/textAboutSettings"
+            android:textAlignment="center"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">playKODI</string>
+    <string name="activityMainTitle">Ссылка из буфера обмена для отправки в Kodi</string>
+    <string name="editTextHost">IP адрес (ex: 192.168.1.20)</string>
+    <string name="editTextPort">порт (ex: 8080)</string>
+    <string name="editTextLogin">логин (ex: kodi)</string>
+    <string name="editTextPass">пароль (ex: 0000)</string>
+    <string name="editTextLink">Ссылка</string>
+    <string name="buttonAddToKodi">В очередь</string>
+    <string name="buttonSaveSettings">Сохранить</string>
+    <string name="buttonSettings">Настройки</string>
+    <string name="buttonCloseSettings">Закрыть</string>
+    <string name="menuAbout">О программе</string>
+    <string name="menuExit">Выход</string>
+    <string name="activitySettings">Настройки</string>
+    <string name="activitySendPlay">playKODI Играть</string>
+    <string name="activitySendQueue">playKODI Очередь</string>
+    <string name="activitySendPlayYoutube">playKODI Играть YouTube</string>
+    <string name="textAbout">Разработано Artem D.\nДля личного использования.\nЧудесного дня!\n  (ᵔᴥᵔ)</string>
+    <string name="checkBoxLightTheme">Светлое оформление</string>
+    <string name="textAboutVersion">Текущая версия -</string>
+    <string name="textAboutSettings">Эти настройки соответсвуют настройкам WEB интерфейса KODI.\n
+        Вэб сервер отключен по умолчанию. Пользователь должен включить его самостоятельно.\n
+        Это можно сделать в Настройках → Сервисы → Вэбсервер → разрешить доступ к Kodi по HTTP. \n
+        http://kodi.wiki/view/web_interface
+    </string>
+    <string name="messageLinkHaveWhitespace">Внимание! Ссылка содержит недопустимые символы</string>
+    <string name="messageLinkSuccess">Ссылка отправлена успешно.</string>
+    <string name="messageNetworkError">Внимание! Ошибка или отсутсвие подключения!</string>
+    <string name="messageCantRecognizeYoutubeLink">Внимание! Ссылка не была опознана как Youtube!</string>
+    <string name="checkBoxCopyToClipboard">Копировать ссылки в буфер обмена</string>
+    <string name="messageSettingsWasntSetup">Настройки приложения не были установлены. Запустите playKODI и проверьте настройки.</string>
+    <string name="activitySendQueueYoutube">playKODI Очередь YouTube</string>
+    <string name="buttonSendToKodi">Играть</string>
+    <string name="checkBoxFollowSystemDarkMode">Оформление в соответствии с ситемными настройка</string>
+    <string name="hintLinkField">Вставьте или введите прямую ссылку для отправки в медиацентр</string>
+    <string name="messageSendingLink">Ссылка отправлена</string>
+    <string name="checkBoxPreviewLink">Показывать ссылку после отправки</string>
+</resources>

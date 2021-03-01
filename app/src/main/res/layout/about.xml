@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/textAbout"
+        android:textIsSelectable="true"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textVersion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/textAboutVersion"
+        android:textIsSelectable="false"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/buttonCloseAbout"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:onClick="onClick"
+        android:text="@string/buttonCloseSettings" />
+</LinearLayout>
+

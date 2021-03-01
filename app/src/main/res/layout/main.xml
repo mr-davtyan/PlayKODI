@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/activityMainTitle"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/editTextLink"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonsRow"
+        android:layout_below="@+id/textLabel"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints=""
+        android:hint="@string/hintLinkField"
+        android:inputType="textMultiLine"
+        android:minLines="4"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="12dp"
+        android:scrollbars="vertical"
+        android:selectAllOnFocus="false"
+        android:textSize="16sp" />
+
+    <TableRow
+        android:id="@+id/buttonsRow"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <Button
+            android:id="@+id/buttonSendToKodi"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:padding="12dp"
+            android:text="@string/buttonSendToKodi" />
+
+        <Button
+            android:id="@+id/buttonAddToKodi"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:padding="12dp"
+            android:text="@string/buttonAddToKodi" />
+
+    </TableRow>
+
+</RelativeLayout>
