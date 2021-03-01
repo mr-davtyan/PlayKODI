@@ -25,7 +25,7 @@ public class About extends Activity {
         }
         String textVersionToPaste = getResources().getString(R.string.textAboutVersion) + " " + version;
         TextView textVersion = findViewById(R.id.textVersion);
-        textVersion.setText(textVersionToPaste);// paste text version
+        textVersion.setText(textVersionToPaste); // insert text version
     }
 
     public void onClick(View view) {

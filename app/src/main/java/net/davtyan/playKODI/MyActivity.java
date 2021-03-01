@@ -7,14 +7,16 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -74,6 +76,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        //checking the current theme
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
@@ -86,7 +89,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
                     break;
             }
         } else {
-            if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) { //checking the theme
+            if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) {
                 setTheme(R.style.AppTheme);
                 darkMode = false;
             } else {
@@ -111,14 +114,14 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             finish();
         }
 
-
+        //initializing clipboard
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (Objects.requireNonNull(clipboard).hasPrimaryClip()) {
             textToPaste = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0).coerceToText(this).toString();
         }
 
         appPreferencesLinkText = findViewById(R.id.editTextLink);
-        appPreferencesLinkText.setText(textToPaste);// paste text from clipboard
+        appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
         String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
                 ":" +
@@ -153,7 +156,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             MakeRequest myMakeRequest = new MakeRequest();
             myMakeRequest.execute(uri);
             myMakeRequest.delegate = this;
-        } else if (id == R.id.buttonAddToKodi) { // button Send to Kodi
+        } else if (id == R.id.buttonAddToKodi) { // button Send to KODI
             MakeRequest myMakeRequest;
             textToPaste = appPreferencesLinkText.getText().toString(); //getting text
             if (textToPaste.equals("")) { //check empty string

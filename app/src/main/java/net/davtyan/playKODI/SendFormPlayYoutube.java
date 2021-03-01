@@ -130,7 +130,6 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
                 break;
             default:
                 Toast.makeText(getApplicationContext(),
-//                        getResources().getString(R.string.messageLinkSuccess) + "\n" + output, Toast.LENGTH_SHORT).show();
                         getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
                 break;
         }
