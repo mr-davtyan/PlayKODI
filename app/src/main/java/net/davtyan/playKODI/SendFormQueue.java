@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Objects;
 
 import static android.content.ClipData.newPlainText;
@@ -46,6 +48,24 @@ public class SendFormQueue extends Activity implements AsyncResponse {
         basicAuth = "Basic " + encodeToString(userPass.getBytes(), NO_WRAP);
 
         String textToPaste = Objects.requireNonNull(intent.getData()).toString();
+
+        //            prepare smb link
+        if (textToPaste.contains("%")){
+            try {
+                textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
+                if (textToPaste.contains("%")){
+                    textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        if (textToPaste.contains("smb:")){
+            textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
+            if (textToPaste.contains("?")){
+                textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
+            }
+        }
 
         uri[0] = "http://" +
                 mSettings.getString(APP_PREFERENCES_HOST, "") +

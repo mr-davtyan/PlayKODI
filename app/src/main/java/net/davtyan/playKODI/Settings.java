@@ -75,7 +75,7 @@ public class Settings extends AppCompatActivity {
         appPreferencesPassText = findViewById(R.id.editTextPass);
 
         appPreferencesHostText.setText(mSettings.getString(APP_PREFERENCES_HOST, ""));
-        appPreferencesPortText.setText(mSettings.getString(APP_PREFERENCES_PORT, ""));
+        appPreferencesPortText.setText(mSettings.getString(APP_PREFERENCES_PORT, "8080"));
         appPreferencesLoginText.setText(mSettings.getString(APP_PREFERENCES_LOGIN, ""));
         appPreferencesPassText.setText(mSettings.getString(APP_PREFERENCES_PASS, ""));
 
@@ -92,13 +92,7 @@ public class Settings extends AppCompatActivity {
         checkBoxCopyToClipboard.setChecked(mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false));
         checkBoxPreviewLink.setChecked(mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false));
 
-        checkBoxFollowSystemDark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
-                checkBoxLightTheme.setEnabled(!isChecked);
-            }
-        });
-
+        checkBoxFollowSystemDark.setOnCheckedChangeListener((arg0, isChecked) -> checkBoxLightTheme.setEnabled(!isChecked));
     }
 
     public void onClick(View v) {

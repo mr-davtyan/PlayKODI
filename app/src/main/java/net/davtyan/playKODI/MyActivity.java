@@ -18,6 +18,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,12 +63,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         } else {
             mySnackbar.setText("Press Back again for Exit").show();
             exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 2 * 1000);
+            new Handler().postDelayed(() -> exit = false, 2 * 1000);
         }
     }
 
@@ -144,6 +141,25 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
                 String youtubeId = extractYTId(textToPaste);
                 textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
             }
+
+//            prepare smb link
+            if (textToPaste.contains("%")){
+                try {
+                    textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
+                    if (textToPaste.contains("%")){
+                        textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (textToPaste.contains("smb:")){
+                textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
+                if (textToPaste.contains("?")){
+                    textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
+                }
+            }
+
             uri[0] = "http://" +
                     mSettings.getString(APP_PREFERENCES_HOST, "") +
                     ":" +
