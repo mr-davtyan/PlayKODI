@@ -17,11 +17,11 @@ import static android.content.ClipData.newPlainText;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_HOST;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_LOGIN;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PASS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PORT;
-import static net.davtyan.playKODI.Settings.basicAuth;
+//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_HOST;
+//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_LOGIN;
+//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PASS;
+//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PORT;
+//import static net.davtyan.playKODI.Settings.basicAuth;
 
 public class SendFormPlayYoutube extends Activity implements AsyncResponse {
 
@@ -50,10 +50,10 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
             finish();
         }
 
-        String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-                ":" +
-                mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-        basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
+//        String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
+//                ":" +
+//                mSettings.getString(APP_PREFERENCES_PASS, "Pass");
+//        basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
 
         String textToPaste = "";
 
@@ -102,6 +102,11 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
                     "{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"params\":{\"item\":{\"file\":\"" +
                             textToPastePlugin +
                             "\"}},\"id\":0}";
+
+            String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
+                    ":" +
+                    mSettings.getString(APP_PREFERENCES_PASS, "Pass");
+            uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
 
             //send request to play
             MakeRequest myMakeRequest = new MakeRequest();

@@ -1,5 +1,10 @@
 package net.davtyan.playKODI;
 
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
+
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -23,16 +28,7 @@ import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_HOST;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_LOGIN;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PASS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PORT;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
-import static net.davtyan.playKODI.Settings.basicAuth;
+//import static net.davtyan.playKODI.Settings.basicAuth;
 
 
 public class MyActivity extends AppCompatActivity implements AsyncResponse {
@@ -120,15 +116,11 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         appPreferencesLinkText = findViewById(R.id.editTextLink);
         appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
-        String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-                ":" +
-                mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-        basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
 
     }
 
     public void onClick(View view) {
-        String[] uri = new String[2];
+        String[] uri = new String[3];
 
         int id = view.getId();
         if (id == R.id.buttonSendToKodi) {
@@ -143,19 +135,19 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             }
 
 //            prepare smb link
-            if (textToPaste.contains("%")){
+            if (textToPaste.contains("%")) {
                 try {
                     textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                    if (textToPaste.contains("%")){
+                    if (textToPaste.contains("%")) {
                         textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
-            if (textToPaste.contains("smb:")){
+            if (textToPaste.contains("smb:")) {
                 textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
-                if (textToPaste.contains("?")){
+                if (textToPaste.contains("?")) {
                     textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
                 }
             }
@@ -165,10 +157,16 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
                     ":" +
                     mSettings.getString(APP_PREFERENCES_PORT, "") +
                     "/jsonrpc";
-            uri[1] =
-                    "{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"params\":{\"item\":{\"file\":\"" +
-                            textToPaste +
-                            "\"}},\"id\":0}";
+
+            uri[1] = "{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"params\":{\"item\":{\"file\":\"" +
+                    textToPaste +
+                    "\"}},\"id\":0}";
+
+            String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
+                    ":" +
+                    mSettings.getString(APP_PREFERENCES_PASS, "Pass");
+            uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
+
             MakeRequest myMakeRequest = new MakeRequest();
             myMakeRequest.execute(uri);
             myMakeRequest.delegate = this;
@@ -188,9 +186,15 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
                     ":" +
                     mSettings.getString(APP_PREFERENCES_PORT, "") +
                     "/jsonrpc";
+
             uri[1] = "{\"jsonrpc\":\"2.0\",\"method\":\"Playlist.Add\",\"params\":{\"playlistid\":1,\"item\":{\"file\":\"" +
                     textToPaste +
                     "\"}},\"id\":0}";
+
+            String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
+                    ":" +
+                    mSettings.getString(APP_PREFERENCES_PASS, "Pass");
+            uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
 
             myMakeRequest = new MakeRequest(); //send request queue
             myMakeRequest.execute(uri);

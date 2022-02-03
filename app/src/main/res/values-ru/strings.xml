@@ -37,4 +37,6 @@
     <string name="hintLinkField">Вставьте или введите прямую ссылку для отправки в медиацентр</string>
     <string name="messageSendingLink">Ссылка отправлена</string>
     <string name="checkBoxPreviewLink">Показывать ссылку после отправки</string>
+    <string name="edit_hosts">Edit Hosts</string>
+    <string name="add_host">Add Host</string>
 </resources>

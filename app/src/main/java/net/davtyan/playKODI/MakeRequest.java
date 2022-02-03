@@ -11,8 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static net.davtyan.playKODI.Settings.basicAuth;
-
 
 class MakeRequest extends AsyncTask<String, Integer, String> {
 
@@ -29,11 +27,14 @@ class MakeRequest extends AsyncTask<String, Integer, String> {
         String response;
         String urlString = params[0]; // URL to call
         String data = params[1]; //data to post
+//        todo update all MakeRequest to include basicAuth as 3rd param
+        String basicAuth = params[2]; //basicAuth
         if (urlString.contains(" ")) {
             response = "Illegal Argument ERROR";
             return response;
         }
         try {
+
             URL urlUrl = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) urlUrl.openConnection();
             connection.setDoInput(true);
