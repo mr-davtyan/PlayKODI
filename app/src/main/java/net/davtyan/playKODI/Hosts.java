@@ -2,6 +2,7 @@ package net.davtyan.playKODI;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,6 +12,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
 
 public class Hosts extends AppCompatActivity {
     ListView list;
@@ -29,6 +34,8 @@ public class Hosts extends AppCompatActivity {
 
     Integer[] imgid={    };
 
+
+
     private static SharedPreferences mSettings;
     static final String APP_PREFERENCES = "MySettings";
 
@@ -40,6 +47,7 @@ public class Hosts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
 
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
@@ -61,39 +69,28 @@ public class Hosts extends AppCompatActivity {
         setContentView(R.layout.hosts);
 
         HostAdapter adapter=new HostAdapter(this, maintitle, subtitle,imgid);
-        list=(ListView)findViewById(R.id.list);
+        list = (ListView)findViewById(R.id.list);
         list.setAdapter(adapter);
 
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                // TODO Auto-generated method stub
-                if(position == 0) {
-                    //code specific to first list item
-                    Toast.makeText(getApplicationContext(),"Place Your First Option Code",Toast.LENGTH_SHORT).show();
-                }
-
-                else if(position == 1) {
-                    //code specific to 2nd list item
-                    Toast.makeText(getApplicationContext(),"Place Your Second Option Code",Toast.LENGTH_SHORT).show();
-                }
-
-                else if(position == 2) {
-
-                    Toast.makeText(getApplicationContext(),"Place Your Third Option Code",Toast.LENGTH_SHORT).show();
-                }
-                else if(position == 3) {
-
-                    Toast.makeText(getApplicationContext(),"Place Your Forth Option Code",Toast.LENGTH_SHORT).show();
-                }
-                else if(position == 4) {
-
-                    Toast.makeText(getApplicationContext(),"Place Your Fifth Option Code",Toast.LENGTH_SHORT).show();
-                }
-
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            if(position == 0) {
+                Toast.makeText(getApplicationContext(),"Place Your First Option Code",Toast.LENGTH_SHORT).show();
             }
+
         });
+    }
+
+    public void onClick(View view) {
+        int id = view.getId();
+
+        if (id == R.id.buttonAddHost) {
+            Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
+            intentHostEditor.putExtra("ID", -1);
+            startActivity(intentHostEditor);
+//            todo launch hosteditor with position len of hosts
+        } else if (id == R.id.buttonCloseHostList) { // button Send to KODI
+            finish();
+        }
+
     }
 }

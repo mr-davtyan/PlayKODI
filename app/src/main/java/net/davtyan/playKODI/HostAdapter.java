@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 class HostAdapter extends ArrayAdapter<String> {
 
@@ -32,7 +34,7 @@ class HostAdapter extends ArrayAdapter<String> {
         View rowView=inflater.inflate(R.layout.host_list_item, null,true);
 
         TextView titleText = (TextView) rowView.findViewById(R.id.name);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+        Button imageView = (Button) rowView.findViewById(R.id.icon);
         TextView subtitleText = (TextView) rowView.findViewById(R.id.host);
 
         titleText.setText(maintitle[position]);

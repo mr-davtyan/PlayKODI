@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:onClick="onClick"
         android:contentDescription="@string/add_host"
         android:src="@drawable/ic_baseline_add_24"
         android:tint="@color/color_accent"
