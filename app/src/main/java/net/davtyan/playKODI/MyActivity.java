@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +27,6 @@ import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//import static net.davtyan.playKODI.Settings.basicAuth;
 
 
 public class MyActivity extends AppCompatActivity implements AsyncResponse {
@@ -120,86 +118,53 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     public void onClick(View view) {
-        String[] uri = new String[3];
-
         int id = view.getId();
-        if (id == R.id.buttonSendToKodi) {
-            textToPaste = appPreferencesLinkText.getText().toString();
-            if (textToPaste.equals("")) {
-                mySnackbar.setText(getResources().getString(R.string.messageLinkHaveWhitespace)).show();
-                return;
-            }
-            if (textToPaste.contains("youtu")) {
-                String youtubeId = extractYTId(textToPaste);
-                textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
-            }
+
+        textToPaste = appPreferencesLinkText.getText().toString();
+        if (textToPaste.equals("")) {
+            mySnackbar.setText(getResources().getString(R.string.messageLinkHaveWhitespace)).show();
+            return;
+        }
+        if (textToPaste.contains("youtu")) {
+            String youtubeId = extractYTId(textToPaste);
+            textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
+        }
 
 //            prepare smb link
-            if (textToPaste.contains("%")) {
-                try {
+        if (textToPaste.contains("%")) {
+            try {
+                textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
+                if (textToPaste.contains("%")) {
                     textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                    if (textToPaste.contains("%")) {
-                        textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            if (textToPaste.contains("smb:")) {
-                textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
-                if (textToPaste.contains("?")) {
-                    textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
-                }
-            }
-
-            uri[0] = "http://" +
-                    mSettings.getString(APP_PREFERENCES_HOST, "") +
-                    ":" +
-                    mSettings.getString(APP_PREFERENCES_PORT, "") +
-                    "/jsonrpc";
-
-            uri[1] = "{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"params\":{\"item\":{\"file\":\"" +
-                    textToPaste +
-                    "\"}},\"id\":0}";
-
-            String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-                    ":" +
-                    mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-            uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
-
-            MakeRequest myMakeRequest = new MakeRequest();
-            myMakeRequest.execute(uri);
-            myMakeRequest.delegate = this;
-        } else if (id == R.id.buttonAddToKodi) { // button Send to KODI
-            MakeRequest myMakeRequest;
-            textToPaste = appPreferencesLinkText.getText().toString(); //getting text
-            if (textToPaste.equals("")) { //check empty string
-                mySnackbar.setText(getResources().getString(R.string.messageLinkHaveWhitespace)).show();
-                return;
-            }
-            if (textToPaste.contains("youtu")) {
-                String youtubeId = extractYTId(textToPaste);    // parse youtube id
-                textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
-            }
-            uri[0] = "http://" +
-                    mSettings.getString(APP_PREFERENCES_HOST, "") +
-                    ":" +
-                    mSettings.getString(APP_PREFERENCES_PORT, "") +
-                    "/jsonrpc";
-
-            uri[1] = "{\"jsonrpc\":\"2.0\",\"method\":\"Playlist.Add\",\"params\":{\"playlistid\":1,\"item\":{\"file\":\"" +
-                    textToPaste +
-                    "\"}},\"id\":0}";
-
-            String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-                    ":" +
-                    mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-            uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
-
-            myMakeRequest = new MakeRequest(); //send request queue
-            myMakeRequest.execute(uri);
-            myMakeRequest.delegate = this;
         }
+        if (textToPaste.contains("smb:")) {
+            textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
+            if (textToPaste.contains("?")) {
+                textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
+            }
+        }
+
+        String[] requestParams = new String[10];
+//        requestParams[0] = APP_PREFERENCES_HOST;
+//        requestParams[1] = APP_PREFERENCES_PORT;
+//        requestParams[2] = APP_PREFERENCES_LOGIN;
+//        requestParams[3] = APP_PREFERENCES_PASS;
+//        requestParams[4] = textToPaste;
+
+        if (id == R.id.buttonSendToKodi) {
+            requestParams[5] = "OPEN";
+        } else if (id == R.id.buttonAddToKodi) { // button Send to KODI
+            requestParams[5] = "ADD";
+        }
+
+        MakeRequest myMakeRequest = new MakeRequest();
+        myMakeRequest.execute(requestParams);
+        myMakeRequest.delegate = this;
+
     }
 
     protected void onResume() {

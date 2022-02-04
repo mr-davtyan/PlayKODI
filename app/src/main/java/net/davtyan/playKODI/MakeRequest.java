@@ -1,6 +1,7 @@
 package net.davtyan.playKODI;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -21,14 +22,30 @@ class MakeRequest extends AsyncTask<String, Integer, String> {
         return s.hasNext() ? s.next() : "";
     }
 
-
     @Override
     protected String doInBackground(String... params) {
         String response;
-        String urlString = params[0]; // URL to call
-        String data = params[1]; //data to post
 //        todo update all MakeRequest to include basicAuth as 3rd param
-        String basicAuth = params[2]; //basicAuth
+        String APP_PREFERENCES_HOST = params[0];
+        String APP_PREFERENCES_PORT = params[1];
+        String APP_PREFERENCES_LOGIN = params[2];
+        String APP_PREFERENCES_PASS = params[3];
+        String link = params[4];
+        String operation = params[5];
+
+        String data;
+        if (operation.equalsIgnoreCase("add")) {
+            data = "{\"jsonrpc\":\"2.0\",\"method\":\"Playlist.Add\",\"params\":{\"playlistid\":1,\"item\":{\"file\":\"" +
+                    link + "\"}},\"id\":0}";
+        } else {
+            data = "{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"params\":{\"item\":{\"file\":\"" +
+                    link + "\"}},\"id\":0}";
+        }
+
+        String urlString = "http://" + APP_PREFERENCES_HOST + ":" + APP_PREFERENCES_PORT + "/jsonrpc";
+        String userPass = APP_PREFERENCES_LOGIN + ":" + APP_PREFERENCES_PASS;
+        String basicAuth = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
+
         if (urlString.contains(" ")) {
             response = "Illegal Argument ERROR";
             return response;

@@ -71,7 +71,6 @@
             android:inputType="textPassword"
             android:autofillHints="editTextPass" />
 
-
         <TableRow
             android:id="@+id/buttonsRow"
             android:layout_width="fill_parent"

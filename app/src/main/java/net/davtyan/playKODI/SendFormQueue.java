@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -14,21 +13,12 @@ import java.net.URLDecoder;
 import java.util.Objects;
 
 import static android.content.ClipData.newPlainText;
-import static android.util.Base64.NO_WRAP;
-import static android.util.Base64.encodeToString;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
-//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_HOST;
-//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_LOGIN;
-//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PASS;
-//import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PORT;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
-//import static net.davtyan.playKODI.Settings.basicAuth;
 
 public class SendFormQueue extends Activity implements AsyncResponse {
-
-    private final String[] uri = new String[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +32,6 @@ public class SendFormQueue extends Activity implements AsyncResponse {
                     getResources().getString(R.string.messageSettingsWasntSetup), Toast.LENGTH_SHORT).show();
             finish();
         }
-
-//        String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-//                ":" +
-//                mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-//        basicAuth = "Basic " + encodeToString(userPass.getBytes(), NO_WRAP);
 
         String textToPaste = Objects.requireNonNull(intent.getData()).toString();
 
@@ -68,21 +53,13 @@ public class SendFormQueue extends Activity implements AsyncResponse {
             }
         }
 
-        uri[0] = "http://" +
-                mSettings.getString(APP_PREFERENCES_HOST, "") +
-                ":" +
-                mSettings.getString(APP_PREFERENCES_PORT, "") +
-                "/jsonrpc";
-
-
-        uri[1] = "{\"jsonrpc\":\"2.0\",\"method\":\"Playlist.Add\",\"params\":{\"playlistid\":1,\"item\":{\"file\":\"" +
-                textToPaste +
-                "\"}},\"id\":0}";
-
-        String userPass = mSettings.getString(APP_PREFERENCES_LOGIN, "Login") +
-                ":" +
-                mSettings.getString(APP_PREFERENCES_PASS, "Pass");
-        uri[2] = "Basic " + Base64.encodeToString(userPass.getBytes(), Base64.NO_WRAP);
+        String[] requestParams = new String[10];
+//        requestParams[0] = APP_PREFERENCES_HOST;
+//        requestParams[1] = APP_PREFERENCES_PORT;
+//        requestParams[2] = APP_PREFERENCES_LOGIN;
+//        requestParams[3] = APP_PREFERENCES_PASS;
+//        requestParams[4] = textToPaste;
+//        requestParams[5] = "ADD";
 
         //coping to clipboard
         if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
@@ -99,7 +76,7 @@ public class SendFormQueue extends Activity implements AsyncResponse {
 
         //send request to play
         MakeRequest myMakeRequest = new MakeRequest();
-        myMakeRequest.execute(uri);
+        myMakeRequest.execute(requestParams);
         myMakeRequest.delegate = this;
 
         finish();
