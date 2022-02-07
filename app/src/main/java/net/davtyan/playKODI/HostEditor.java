@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,7 @@ public class HostEditor extends AppCompatActivity {
     private EditText editTextPass;
     private Button buttonHostColor;
     private EditText editTextColorCode;
+    private Button buttonHostDelete;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,17 +47,17 @@ public class HostEditor extends AppCompatActivity {
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
-                    setTheme(R.style.AppThemeDark);
+                    setTheme(android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
                     break;
                 case Configuration.UI_MODE_NIGHT_NO:
-                    setTheme(R.style.AppTheme);
+                    setTheme(android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth);
                     break;
             }
         } else {
             if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) { //checking the theme
-                setTheme(R.style.AppTheme);
+                setTheme(android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth);
             } else {
-                setTheme(R.style.AppThemeDark);
+                setTheme(android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
             }
         }
 
@@ -72,6 +74,7 @@ public class HostEditor extends AppCompatActivity {
         editTextPass = findViewById(R.id.editTextPass);
         editTextColorCode = findViewById(R.id.editTextColorCode);
         buttonHostColor = findViewById(R.id.buttonColorPicker);
+        buttonHostDelete = findViewById(R.id.buttonHostDelete);
 
         Intent intent = getIntent();
         hostId = intent.getExtras().getInt("ID");
@@ -88,6 +91,8 @@ public class HostEditor extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 buttonHostColor.setBackgroundColor(-11889757);
             }
+        }else{
+            buttonHostDelete.setVisibility(View.GONE);
         }
     }
 
@@ -96,6 +101,10 @@ public class HostEditor extends AppCompatActivity {
 
         int id = v.getId();
         if (id == R.id.buttonHostSave) {  // save button
+            if(editTextHost.getText().toString().equalsIgnoreCase("")){
+                Toast.makeText(getApplicationContext(), "Please enter Host IP and Port first.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Host newHost = new Host(
                     editTextNickname.getText().toString(),
                     editTextHost.getText().toString(),
