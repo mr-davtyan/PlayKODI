@@ -2,23 +2,23 @@ package net.davtyan.playKODI;
 
 import java.io.Serializable;
 
-public class Host  implements Serializable {
+public class Host implements Serializable {
     String nickName;
     String host;
-     String port;
-     String login;
-     String password;
-     String color;
-     int order;
+    String port;
+    String login;
+    String password;
+    String color;
+    int order;
 
     public Host(
             String nickName,
-         String host,
-         String port,
-         String login,
-         String password,
-         String color,
-         int order
+            String host,
+            String port,
+            String login,
+            String password,
+            String color,
+            int order
     ) {
         this.nickName = nickName;
         this.host = host;

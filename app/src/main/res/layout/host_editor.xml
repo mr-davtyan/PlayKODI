@@ -33,7 +33,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:onClick="onClick"
-                android:background="#7DA9B3"
+                android:background="@color/color_primary_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/editTextName"
                 app:layout_constraintBottom_toBottomOf="@id/editTextName"/>
@@ -44,6 +44,7 @@
                 android:autofillHints="Nickname"
                 android:inputType="text"
                 android:visibility="gone"
+                android:text="-11889757"
                 app:layout_constraintBottom_toBottomOf="@id/buttonColorPicker"
                 app:layout_constraintTop_toTopOf="@id/buttonColorPicker"
                 app:layout_constraintEnd_toEndOf="@id/buttonColorPicker"

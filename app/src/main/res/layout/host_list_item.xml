@@ -7,10 +7,10 @@
 
     <Button
         android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_margin="10dp"
-        android:background="@drawable/roundedbutton"
+        android:background="@color/color_primary_dark"
         android:clickable="false"
         android:focusable="false" />
 

@@ -2,14 +2,12 @@ package net.davtyan.playKODI;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +28,7 @@ public class Hosts extends AppCompatActivity {
     List<Host> hosts = new ArrayList<>();
     String[] hostNicknameArr;
     String[] hostAddressArr;
-    Integer[] imgid;
+    String[] colorCodesArr;
     HostAdapter adapter;
 
     @Override
@@ -87,35 +85,33 @@ public class Hosts extends AppCompatActivity {
         });
         list.setOnItemLongClickListener((parent, view, position, id) -> {
             String title = hosts.get(position).nickName;
-            if (title.equalsIgnoreCase("")){
+            if (title.equalsIgnoreCase("")) {
                 title = hosts.get(position).host;
             }
             new AlertDialog.Builder(this)
                     .setTitle(title)
-                    .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
-                            intentHostEditor.putExtra("ID", position);
-                            startActivity(intentHostEditor);
-                        }})
-                    .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            hosts.remove(position);
-                            SharedPreferences.Editor editor = mSettings.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(hosts);
-                            editor.putString("hosts", json);
-                            editor.apply();
-                            updateAdapter();
-                            adapter.notifyDataSetChanged();
-                            list.invalidateViews();
-                        }})
-            .show();
+                    .setPositiveButton("Edit", (dialog, whichButton) -> {
+                        Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
+                        intentHostEditor.putExtra("ID", position);
+                        startActivity(intentHostEditor);
+                    })
+                    .setNegativeButton("Delete", (dialog, whichButton) -> {
+                        hosts.remove(position);
+                        SharedPreferences.Editor editor = mSettings.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(hosts);
+                        editor.putString("hosts", json);
+                        editor.apply();
+                        updateAdapter();
+                        adapter.notifyDataSetChanged();
+                        list.invalidateViews();
+                    })
+                    .show();
             return true;
         });
     }
 
-    public void updateAdapter(){
+    public void updateAdapter() {
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
         hosts.clear();
@@ -123,21 +119,27 @@ public class Hosts extends AppCompatActivity {
 
         List<String> hostNickname = new ArrayList<>();
         List<String> hostAddress = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
         for (Host host : hosts) {
             hostNickname.add(host.nickName);
-            if(!host.port.equals("")){hostAddress.add(host.host + ":" + host.port);}
-            else{hostAddress.add(host.host);}
+            if (!host.port.equals("")) {
+                hostAddress.add(host.host + ":" + host.port);
+            } else {
+                hostAddress.add(host.host);
+            }
+            colorCodes.add(host.color);
         }
         hostNicknameArr = new String[hostNickname.size()];
         hostAddressArr = new String[hostAddress.size()];
+        colorCodesArr = new String[colorCodes.size()];
         hostNicknameArr = hostNickname.toArray(hostNicknameArr);
         hostAddressArr = hostAddress.toArray(hostAddressArr);
-        imgid = new Integer[]{};
+        colorCodesArr = colorCodes.toArray(colorCodesArr);
 
         adapter = new HostAdapter(this,
                 hostNicknameArr,
                 hostAddressArr,
-                imgid);
+                colorCodesArr);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
     }

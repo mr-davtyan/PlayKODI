@@ -1,12 +1,10 @@
 package net.davtyan.playKODI;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +12,6 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
@@ -86,7 +83,11 @@ public class HostEditor extends AppCompatActivity {
             editTextLogin.setText(hosts.get(hostId).login);
             editTextPass.setText(hosts.get(hostId).password);
             editTextColorCode.setText(hosts.get(hostId).color);
-            buttonHostColor.setBackgroundColor(Integer.decode(editTextColorCode.getText().toString()));
+            try {
+                buttonHostColor.setBackgroundColor(Integer.decode(editTextColorCode.getText().toString()));
+            } catch (NumberFormatException e) {
+                buttonHostColor.setBackgroundColor(-11889757);
+            }
         }
     }
 
@@ -140,9 +141,9 @@ public class HostEditor extends AppCompatActivity {
                             })
                     .setNegativeButton(getString(R.string.cancel),
                             (dialogInterface, i) -> dialogInterface.dismiss())
-                    .attachAlphaSlideBar(true) // the default value is true.
-                    .attachBrightnessSlideBar(true)  // the default value is true.
-                    .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+                    .attachAlphaSlideBar(false) // the default value is true.
+                    .attachBrightnessSlideBar(false)  // the default value is true.
+                    .setBottomSpace(12) // set a bottom space between the last slide bar and buttons.
                     .show();
         }
     }
