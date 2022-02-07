@@ -39,4 +39,6 @@
     <string name="checkBoxPreviewLink">Показывать ссылку после отправки</string>
     <string name="edit_hosts">Edit Hosts</string>
     <string name="add_host">Add Host</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

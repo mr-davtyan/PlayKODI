@@ -25,18 +25,29 @@
                 android:hint="Nickname"
                 android:layout_marginEnd="20dp"
                 android:inputType="text"
-                app:layout_constraintBottom_toBottomOf="@id/buttonColorPicker"
-                app:layout_constraintTop_toTopOf="@id/buttonColorPicker"
-                app:layout_constraintEnd_toStartOf="@id/buttonColorPicker"
-                app:layout_constraintStart_toStartOf="parent" />
-
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonColorPicker"/>
             <Button
                 android:id="@+id/buttonColorPicker"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/roundedbutton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="onClick"
+                android:background="#7DA9B3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/editTextName"
+                app:layout_constraintBottom_toBottomOf="@id/editTextName"/>
+            <EditText
+                android:id="@+id/editTextColorCode"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:autofillHints="Nickname"
+                android:inputType="text"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/buttonColorPicker"
+                app:layout_constraintTop_toTopOf="@id/buttonColorPicker"
+                app:layout_constraintEnd_toEndOf="@id/buttonColorPicker"
+                app:layout_constraintStart_toStartOf="@id/buttonColorPicker" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,7 +95,7 @@
                 android:layout_margin="4sp"
                 android:layout_weight="2"
                 android:onClick="onClick"
-                android:text="Save Host"
+                android:text="Save"
                 android:textAlignment="center" />
             <Button
                 android:id="@+id/buttonHostDelete"
@@ -94,7 +105,7 @@
                 android:layout_margin="4sp"
                 android:layout_weight="2"
                 android:onClick="onClick"
-                android:text="Delete Host"
+                android:text="Delete"
                 android:textAlignment="center" />
             <Button
                 android:id="@+id/buttonHostCancel"

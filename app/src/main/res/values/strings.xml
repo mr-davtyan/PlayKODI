@@ -40,4 +40,6 @@
     <string name="messageSendingLink">Sending the Link</string>
     <string name="edit_hosts">Edit Hosts</string>
     <string name="add_host">Add Host</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>
