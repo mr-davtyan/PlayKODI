@@ -36,7 +36,6 @@ public class HostEditor extends AppCompatActivity {
     private EditText editTextPass;
     private Button buttonHostColor;
     private EditText editTextColorCode;
-    private Button buttonHostDelete;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class HostEditor extends AppCompatActivity {
         editTextPass = findViewById(R.id.editTextPass);
         editTextColorCode = findViewById(R.id.editTextColorCode);
         buttonHostColor = findViewById(R.id.buttonColorPicker);
-        buttonHostDelete = findViewById(R.id.buttonHostDelete);
+        Button buttonHostDelete = findViewById(R.id.buttonHostDelete);
 
         Intent intent = getIntent();
         hostId = intent.getExtras().getInt("ID");

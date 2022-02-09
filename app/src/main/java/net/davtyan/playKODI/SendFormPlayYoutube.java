@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import static android.content.ClipData.newPlainText;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 
 public class SendFormPlayYoutube extends Activity implements AsyncResponse {
 

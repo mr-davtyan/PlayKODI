@@ -5,20 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static net.davtyan.playKODI.MyActivity.haveToCloseApp;
 
 public class Settings extends AppCompatActivity {
 
     static final String APP_PREFERENCES = "MySettings";
-
-    static final String APP_PREFERENCES_FIRST_RUN = "Run"; //
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
     static final String APP_PREFERENCES_THEME_DARK_AUTO = "AutoTheme"; //
     static final String APP_PREFERENCES_COPY_LINKS = "CopyLinks"; //
@@ -80,24 +75,16 @@ public class Settings extends AppCompatActivity {
 
         int id = v.getId();
         if (id == R.id.buttonSaveSettings) {  // save button
-
             SharedPreferences.Editor editor = mSettings.edit();
-            editor.putBoolean(APP_PREFERENCES_FIRST_RUN, false);
             editor.putBoolean(APP_PREFERENCES_THEME_DARK, checkBoxLightTheme.isChecked());
             editor.putBoolean(APP_PREFERENCES_THEME_DARK_AUTO, checkBoxFollowSystemDark.isChecked());
             editor.putBoolean(APP_PREFERENCES_COPY_LINKS, checkBoxCopyToClipboard.isChecked());
             editor.putBoolean(APP_PREFERENCES_PREVIEW_LINKS, checkBoxPreviewLink.isChecked());
-
             editor.apply();
-
             startActivity(intentMyActivity);
             finish();
         } else if (id == R.id.buttonCloseSettings) {  // exit button
-            if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
-                startActivity(intentMyActivity);
-            } else {
-                haveToCloseApp = true;
-            }
+            startActivity(intentMyActivity);
             finish();
         } else if (id == R.id.buttonEditHosts) {  // exit button
             Intent intentEditHosts = new Intent(Settings.this, Hosts.class);
@@ -107,12 +94,8 @@ public class Settings extends AppCompatActivity {
     }
 
     public void onBackPressed() { // Back button
-        if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
-            Intent intentMyActivity = new Intent(Settings.this, MyActivity.class);
-            startActivity(intentMyActivity);
-        } else {
-            haveToCloseApp = true;
-        }
+        Intent intentMyActivity = new Intent(Settings.this, MyActivity.class);
+        startActivity(intentMyActivity);
         finish();
     }
 

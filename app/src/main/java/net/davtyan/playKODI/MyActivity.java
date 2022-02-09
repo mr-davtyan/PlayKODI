@@ -1,7 +1,7 @@
 package net.davtyan.playKODI;
 
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
 
@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -99,7 +100,8 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && !haveToCloseApp) {
-            Intent intent = new Intent(MyActivity.this, Settings.class);
+            Toast.makeText(this, "Please add at least one KODI host", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MyActivity.this, Hosts.class);
             startActivity(intent);
         } else if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && haveToCloseApp) {
             finish();
@@ -209,6 +211,11 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             return true;
         } else if (id == R.id.action_exit) {
             System.exit(0);
+            finish();
+            return true;
+        } else if (id == R.id.action_hosts) {
+            Intent intentEditHosts = new Intent(MyActivity.this, Hosts.class);
+            startActivity(intentEditHosts);
             finish();
             return true;
         }

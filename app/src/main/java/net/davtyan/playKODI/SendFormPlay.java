@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 
 public class SendFormPlay extends Activity implements AsyncResponse {

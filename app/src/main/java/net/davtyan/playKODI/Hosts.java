@@ -1,6 +1,8 @@
 package net.davtyan.playKODI;
 
 
+import static net.davtyan.playKODI.MyActivity.haveToCloseApp;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +22,7 @@ import java.util.List;
 
 public class Hosts extends AppCompatActivity {
     static final String APP_PREFERENCES = "MySettings";
-
+    static final String APP_PREFERENCES_FIRST_RUN = "Run"; //
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
     static final String APP_PREFERENCES_THEME_DARK_AUTO = "AutoTheme"; //
     private static SharedPreferences mSettings;
@@ -111,6 +113,12 @@ public class Hosts extends AppCompatActivity {
         });
     }
 
+    public void update_first_run() {
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(APP_PREFERENCES_FIRST_RUN, hosts.size()==0);
+        editor.apply();
+    }
+
     public void updateAdapter() {
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
@@ -142,6 +150,7 @@ public class Hosts extends AppCompatActivity {
                 colorCodesArr);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
+        update_first_run();
     }
 
     public void onClick(View view) {
@@ -156,9 +165,27 @@ public class Hosts extends AppCompatActivity {
             }
             startActivity(intentHostEditor);
 
-        } else if (id == R.id.buttonCloseHostList) { // button Send to KODI
+        } else if (id == R.id.buttonCloseHostList) {
+            update_first_run();
+            if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
+                Intent intentMyActivity = new Intent(Hosts.this, MyActivity.class);
+                startActivity(intentMyActivity);
+            } else {
+                haveToCloseApp = true;
+            }
             finish();
         }
 
+    }
+
+    public void onBackPressed() { // Back button
+        update_first_run();
+        if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
+            Intent intentMyActivity = new Intent(Hosts.this, MyActivity.class);
+            startActivity(intentMyActivity);
+        } else {
+            haveToCloseApp = true;
+        }
+        finish();
     }
 }
