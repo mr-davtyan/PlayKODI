@@ -44,6 +44,8 @@ public class HostEditor extends AppCompatActivity {
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        setTheme(R.style.HiddenTitleTheme);
+
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
@@ -102,7 +104,7 @@ public class HostEditor extends AppCompatActivity {
         int id = v.getId();
         if (id == R.id.buttonHostSave) {  // save button
             if(editTextHost.getText().toString().equalsIgnoreCase("")){
-                Toast.makeText(getApplicationContext(), "Please enter Host IP and Port first.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please enter IP address and Port first.", Toast.LENGTH_SHORT).show();
                 return;
             }
             Host newHost = new Host(

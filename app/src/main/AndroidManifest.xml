@@ -58,7 +58,7 @@
         </activity>
         <activity
             android:name=".HostEditor"
-            android:label="Host"
+            android:label="KODI Host"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

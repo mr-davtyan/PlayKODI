@@ -23,7 +23,7 @@
     <string name="textAboutSettings">Эти настройки соответсвуют настройкам WEB интерфейса KODI.\n
         Вэб сервер отключен по умолчанию. Пользователь должен включить его самостоятельно.\n
         Это можно сделать в Настройках → Сервисы → Вэбсервер → разрешить доступ к Kodi по HTTP. \n
-        http://kodi.wiki/view/web_interface
+        https://kodi.wiki/view/Web_interface
     </string>
     <string name="messageLinkHaveWhitespace">Внимание! Ссылка содержит недопустимые символы</string>
     <string name="messageLinkSuccess">Ссылка отправлена успешно.</string>

@@ -28,7 +28,7 @@
         The webserver is disabled by default and has to be manually enabled by the user. \n
         This can be done in Settings → Services → Webserver → Allow control of Kodi via HTTP. \n
         The settings allow to specify a custom port and a username and password for remote access. \n
-        http://kodi.wiki/view/web_interface
+        https://kodi.wiki/view/Web_interface
     </string>
     <string name="messageLinkHaveWhitespace">WARNING! The Link Has Illegal Arguments</string>
     <string name="messageLinkSuccess">The Link sent successfully.</string>

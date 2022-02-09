@@ -15,13 +15,14 @@ public class About extends Activity {
     static final String APP_PREFERENCES = "MySettings";
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
     static final String APP_PREFERENCES_THEME_DARK_AUTO = "AutoTheme"; //
-    private static SharedPreferences mSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        setTheme(R.style.HiddenTitleTheme);
 
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
