@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -108,18 +107,28 @@ public class Settings extends AppCompatActivity {
 
         if (hosts.size() > 1) {
             checkBoxUseDefaultHost.setChecked(mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false));
-            spinnerDefaultHost.setEnabled(checkBoxUseDefaultHost.isChecked());
+
             try {
                 spinnerDefaultHost.setSelection(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "")));
             } catch (Exception e) {
                 checkBoxUseDefaultHost.setChecked(false);
                 spinnerDefaultHost.setSelection(0);
             }
+
+            if (checkBoxUseDefaultHost.isChecked()){
+                spinnerDefaultHost.setVisibility(View.VISIBLE);
+                findViewById(R.id.textViewDefaultHost).setVisibility(View.VISIBLE);
+            }else{
+                spinnerDefaultHost.setVisibility(View.INVISIBLE);
+                findViewById(R.id.textViewDefaultHost).setVisibility(View.INVISIBLE);
+            }
             checkBoxUseDefaultHost.setOnCheckedChangeListener((arg0, isChecked) -> {
                 if (isChecked){
                     spinnerDefaultHost.setVisibility(View.VISIBLE);
+                    findViewById(R.id.textViewDefaultHost).setVisibility(View.VISIBLE);
                 }else{
                     spinnerDefaultHost.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.textViewDefaultHost).setVisibility(View.INVISIBLE);
                 }
             });
         } else {

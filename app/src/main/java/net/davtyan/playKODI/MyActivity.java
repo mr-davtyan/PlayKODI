@@ -77,6 +77,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         super.onCreate(savedInstanceState);
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        convertHostToList(mSettings);
 
         //checking the current theme
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
@@ -138,7 +139,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
 
         for (Host host : hosts) {
             String fullName = host.host + ":" + host.port;
-            if (!host.nickName.equals("")) fullName = host.nickName;
+            if (!host.nickName.equals("")) fullName = host.nickName + " (" + fullName + " )";
             spinnerItems.add(fullName);
             colorCodes.add(host.color);
             hostFullAddress.add(host.host + ":" + host.port);
@@ -284,5 +285,38 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
     }
 
+    public static void convertHostToList(SharedPreferences prefs){
+        final String APP_PREFERENCES_HOST = "Host"; //
+        final String APP_PREFERENCES_PORT = "Port"; //
+        final String APP_PREFERENCES_LOGIN = "Login"; //
+        final String APP_PREFERENCES_PASS = "Pass"; //
+
+        if (!prefs.getString(APP_PREFERENCES_HOST, "convertedtolist156187132417").equalsIgnoreCase("convertedtolist156187132417")){
+            SharedPreferences.Editor editor = prefs.edit();
+            Gson gson = new Gson();
+            List<Host> hosts = new ArrayList<>();
+
+            Host newHost = new Host(
+                    "",
+                    prefs.getString(APP_PREFERENCES_HOST, ""),
+                    prefs.getString(APP_PREFERENCES_PORT, ""),
+                    prefs.getString(APP_PREFERENCES_LOGIN, ""),
+                    prefs.getString(APP_PREFERENCES_PASS, ""),
+                    "-11889757",
+                    0);
+            hosts.add(newHost);
+
+            String json = gson.toJson(hosts);
+            editor.putString("hosts", json);
+
+            editor.putString(APP_PREFERENCES_HOST, "convertedtolist156187132417");
+            editor.putString(APP_PREFERENCES_PORT, "convertedtolist156187132417");
+            editor.putString(APP_PREFERENCES_LOGIN, "convertedtolist156187132417");
+            editor.putString(APP_PREFERENCES_PASS, "convertedtolist156187132417");
+
+            editor.apply();
+        }
+
+    }
 
 }

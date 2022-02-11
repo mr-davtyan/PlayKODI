@@ -26,6 +26,7 @@ public class SendFormPlay extends Activity implements AsyncResponse {
         Intent intent = getIntent();
 
         SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        MyActivity.convertHostToList(mSettings);
 
         if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {  //if preference are not set - exit
             Toast.makeText(getApplicationContext(),
