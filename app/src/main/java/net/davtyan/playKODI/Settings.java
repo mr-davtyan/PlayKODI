@@ -110,9 +110,7 @@ public class Settings extends AppCompatActivity {
             checkBoxUseDefaultHost.setChecked(mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false));
             spinnerDefaultHost.setEnabled(checkBoxUseDefaultHost.isChecked());
             try {
-                Log.w("hosts", String.valueOf(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "").toString())));
                 spinnerDefaultHost.setSelection(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "")));
-                spinnerDefaultHost.setSelection(1);
             } catch (Exception e) {
                 checkBoxUseDefaultHost.setChecked(false);
                 spinnerDefaultHost.setSelection(0);
@@ -123,7 +121,6 @@ public class Settings extends AppCompatActivity {
                 }else{
                     spinnerDefaultHost.setVisibility(View.INVISIBLE);
                 }
-
             });
         } else {
             findViewById(R.id.layoutSpinner).setVisibility(View.GONE);

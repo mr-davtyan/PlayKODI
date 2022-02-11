@@ -64,10 +64,23 @@
             android:id="@+id/spinnerDefaultHost"
             android:layout_width="0dp"
             android:layout_height="40sp"
+            android:layout_margin="1sp"
             android:textAlignment="center"
+            android:background="?android:attr/colorBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="10dp"/>
+
+        <View
+            android:id="@+id/spinnerView"
+            android:layout_width="0dp"
+            android:layout_height="42sp"
+            android:background="@color/color_primary_dark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

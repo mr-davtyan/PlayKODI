@@ -4,6 +4,8 @@ import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+
 
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -45,7 +48,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     private EditText appPreferencesLinkText;
     private String textToPaste = "";
     private SharedPreferences mSettings;
-    private Spinner spinnerDefaultHost;
+    private View spinnerView;
 
     private static String extractYTId(String ytUrl) {
 
@@ -123,20 +126,44 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         appPreferencesLinkText = findViewById(R.id.editTextLink);
         appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
-        spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
+        Spinner spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
+        spinnerView = findViewById(R.id.spinnerView);
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
         List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
 
         List<String> spinnerItems = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+        List<String> hostFullAddress = new ArrayList<>();
 
         for (Host host : hosts) {
             String fullName = host.host + ":" + host.port;
             if (!host.nickName.equals("")) fullName = host.nickName;
             spinnerItems.add(fullName);
+            colorCodes.add(host.color);
+            hostFullAddress.add(host.host + ":" + host.port);
         }
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
         spinnerDefaultHost.setAdapter(spinnerAdapter);
+        try {
+            spinnerDefaultHost.setSelection(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "")));
+        } catch (Exception e) {
+            spinnerDefaultHost.setSelection(0);
+        }
+        spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                spinnerView.setBackgroundColor(Integer.decode(colorCodes.get(position)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+
     }
 
     public void onClick(View view) {
