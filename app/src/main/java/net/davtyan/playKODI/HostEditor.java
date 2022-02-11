@@ -43,7 +43,7 @@ public class HostEditor extends AppCompatActivity {
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        setTheme(R.style.HiddenTitleTheme);
+        setTheme(R.style.Theme_Transparent);
 
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {

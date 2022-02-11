@@ -27,13 +27,11 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:padding="2dp"
-            android:textColor="@color/color_primary_dark" />
+            android:padding="2dp"/>
         <TextView
             android:id="@+id/host"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_alpha"
             android:layout_marginStart="5dp"/>
     </LinearLayout>
 </LinearLayout>

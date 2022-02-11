@@ -142,9 +142,8 @@ public class SendFormPlay extends Activity implements AsyncResponse {
                         getResources().getString(R.string.messageNetworkError), Toast.LENGTH_SHORT).show();
                 break;
             default:
-//                Toast.makeText(getApplicationContext(),
-//                        getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(),output, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
 
                 break;
         }
