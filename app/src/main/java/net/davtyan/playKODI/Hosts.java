@@ -2,14 +2,18 @@ package net.davtyan.playKODI;
 
 
 import static net.davtyan.playKODI.MyActivity.haveToCloseApp;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +23,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+//    todo if only one host - disable pref UseDefaultHostForShareButton, put first host as default
+
 
 public class Hosts extends AppCompatActivity {
     static final String APP_PREFERENCES = "MySettings";
@@ -98,8 +105,17 @@ public class Hosts extends AppCompatActivity {
                         startActivity(intentHostEditor);
                     })
                     .setNegativeButton("Delete", (dialog, whichButton) -> {
-                        hosts.remove(position);
                         SharedPreferences.Editor editor = mSettings.edit();
+                        String deletedHostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
+                        String defaultHostFromSettings = mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "");
+                        if (deletedHostFullAddress.equalsIgnoreCase(defaultHostFromSettings)) {
+                            editor = mSettings.edit();
+                            editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+                            editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostAddressArr[0]);
+                            editor.apply();
+                            Toast.makeText(this, "Default host has been deleted!", Toast.LENGTH_LONG).show();
+                        }
+                        hosts.remove(position);
                         Gson gson = new Gson();
                         String json = gson.toJson(hosts);
                         editor.putString("hosts", json);
@@ -109,6 +125,7 @@ public class Hosts extends AppCompatActivity {
                         list.invalidateViews();
                     })
                     .show();
+
             return true;
         });
     }
@@ -130,11 +147,7 @@ public class Hosts extends AppCompatActivity {
         List<String> colorCodes = new ArrayList<>();
         for (Host host : hosts) {
             hostNickname.add(host.nickName);
-            if (!host.port.equals("")) {
-                hostAddress.add(host.host + ":" + host.port);
-            } else {
-                hostAddress.add(host.host);
-            }
+            hostAddress.add(host.host + ":" + host.port);
             colorCodes.add(host.color);
         }
         hostNicknameArr = new String[hostNickname.size()];

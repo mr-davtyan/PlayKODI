@@ -21,7 +21,7 @@
     <string name="activitySendQueueYoutube">playKODI Queue YouTube</string>
     <string name="textAbout">Developed by Artem D.\nFor personal usage.\nHave a wonderful day!\n  (ᵔᴥᵔ)</string>
     <string name="checkBoxLightTheme">Light Theme</string>
-    <string name="checkBoxFollowSystemDarkMode">Follow System Light/Dark Mode</string>
+    <string name="checkBoxFollowSystemDarkMode">Follow system Light/Dark Theme</string>
     <string name="checkBoxPreviewLink">Show link after sending</string>
     <string name="textAboutVersion">Current version -</string>
     <string name="textAboutSettings">You can find these settings under your KODI\'s web interface configuration. \n
@@ -34,7 +34,7 @@
     <string name="messageLinkSuccess">The Link sent successfully.</string>
     <string name="messageNetworkError">WARNING! Network Timeout!</string>
     <string name="messageCantRecognizeYoutubeLink">WARNING! The link was Not recognized as Youtube!</string>
-    <string name="checkBoxCopyToClipboard">Copy Links to clipboard</string>
+    <string name="checkBoxCopyToClipboard">Copy links to clipboard</string>
     <string name="messageSettingsWasntSetup">App Settings were not setup properly. Run playKODI and check settings.</string>
     <string name="hintLinkField">Insert or enter a direct link to send to the media center.</string>
     <string name="messageSendingLink">Sending the Link</string>
@@ -42,4 +42,5 @@
     <string name="add_host">Add Host</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="dark_theme">Dark Theme</string>
 </resources>

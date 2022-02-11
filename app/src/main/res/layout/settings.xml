@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -26,27 +27,11 @@
             android:text="@string/edit_hosts"
             android:textAlignment="center" />
 
-        <CheckBox
-            android:id="@+id/checkBoxFollowSystemDark"
+        <Spinner
+            android:id="@+id/spinnerTheme"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4sp"
-            android:checked="false"
-            android:clickable="true"
-            android:enabled="true"
-            android:focusable="true"
-            android:text="@string/checkBoxFollowSystemDarkMode" />
-
-        <CheckBox
-            android:id="@+id/checkBoxLightTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4sp"
-            android:checked="false"
-            android:clickable="true"
-            android:focusable="true"
-            android:enabled="true"
-            android:text="@string/checkBoxLightTheme" />
+            android:layout_height="40sp"
+            android:layout_margin="4sp" />
 
         <CheckBox
             android:id="@+id/checkBoxCopyToClipboard"
@@ -70,11 +55,53 @@
             android:text="@string/checkBoxPreviewLink"
             android:focusable="true" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4sp"
+            android:layout_marginEnd="4sp"
+            android:layout_marginBottom="4sp"
+            android:layout_marginTop="14sp"
+            android:gravity="center_horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxUseDefaultHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:clickable="true"
+                android:enabled="true"
+                android:text="Always use default host for 'Share Button'"
+                android:focusable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/textViewDefaultHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Default Host"
+                android:layout_marginStart="10sp"
+                app:layout_constraintTop_toTopOf="@+id/spinnerDefaultHost"
+                app:layout_constraintBottom_toBottomOf="@id/spinnerDefaultHost"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinnerDefaultHost"
+                android:layout_width="0dp"
+                android:layout_height="40sp"
+                android:textAlignment="center"
+                android:layout_marginEnd="10sp"
+                app:layout_constraintTop_toBottomOf="@id/checkBoxUseDefaultHost"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textViewDefaultHost" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TableRow
             android:id="@+id/buttonsRow"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal">
 
             <Button
@@ -100,16 +127,6 @@
                 android:textAlignment="center" />
         </TableRow>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4sp"
-            android:autoLink="web"
-            android:gravity="center_horizontal"
-            android:text="@string/textAboutSettings"
-            android:textAlignment="center"
-            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>
 

@@ -15,16 +15,22 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +45,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     private EditText appPreferencesLinkText;
     private String textToPaste = "";
     private SharedPreferences mSettings;
+    private Spinner spinnerDefaultHost;
 
     private static String extractYTId(String ytUrl) {
 
@@ -116,7 +123,20 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         appPreferencesLinkText = findViewById(R.id.editTextLink);
         appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
+        spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
+        Gson gson = new Gson();
+        String json = mSettings.getString("hosts", "");
+        List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
 
+        List<String> spinnerItems = new ArrayList<>();
+
+        for (Host host : hosts) {
+            String fullName = host.host + ":" + host.port;
+            if (!host.nickName.equals("")) fullName = host.nickName;
+            spinnerItems.add(fullName);
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
+        spinnerDefaultHost.setAdapter(spinnerAdapter);
     }
 
     public void onClick(View view) {
