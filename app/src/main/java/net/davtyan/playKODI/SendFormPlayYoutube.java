@@ -1,5 +1,12 @@
 package net.davtyan.playKODI;
 
+import static android.content.ClipData.newPlainText;
+import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,14 +15,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.content.ClipData.newPlainText;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
-import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 
 public class SendFormPlayYoutube extends Activity implements AsyncResponse {
 
@@ -80,20 +87,46 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
 
             String textToPastePlugin = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
 
+            Gson gson = new Gson();
+            String json = mSettings.getString("hosts", "");
+            List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
+
             String[] requestParams = new String[10];
-//            requestParams[0] = APP_PREFERENCES_HOST;
-//            requestParams[1] = APP_PREFERENCES_PORT;
-//            requestParams[2] = APP_PREFERENCES_LOGIN;
-//            requestParams[3] = APP_PREFERENCES_PASS;
-//            requestParams[4] = textToPastePlugin;
-//            requestParams[5] = "OPEN";
 
-            //send request to play
-            MakeRequest myMakeRequest = new MakeRequest();
-            myMakeRequest.execute(requestParams);
-            myMakeRequest.delegate = this;
+            List<String> hostFullAddress = new ArrayList<>();
+            for (Host host : hosts) {
+                hostFullAddress.add(host.host + ":" + host.port);
+            }
+            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+            boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+            if (!useDefaultHost || hostId < 0) {
+                Intent intentHostsList = new Intent(SendFormPlayYoutube.this, HostsListDialog.class);
+                intentHostsList.putExtra("link", textToPastePlugin);
+                intentHostsList.putExtra("host", hosts.get(hostId).host);
+                intentHostsList.putExtra("port", hosts.get(hostId).port);
+                intentHostsList.putExtra("login", hosts.get(hostId).login);
+                intentHostsList.putExtra("password", hosts.get(hostId).password);
+                intentHostsList.putExtra("host", hosts.get(hostId).host);
+                intentHostsList.putExtra("event", "OPEN");
+                startActivity(intentHostsList);
+                finish();
+            } else {
 
-            finish();
+                requestParams[0] = hosts.get(hostId).host;
+                requestParams[1] = hosts.get(hostId).port;
+                requestParams[2] = hosts.get(hostId).login;
+                requestParams[3] = hosts.get(hostId).password;
+                requestParams[4] = textToPastePlugin;
+                requestParams[5] = "OPEN";
+
+
+                //send request to play
+                MakeRequest myMakeRequest = new MakeRequest();
+                myMakeRequest.execute(requestParams);
+                myMakeRequest.delegate = this;
+
+                finish();
+            }
 
         } else { //exit if not a youtube link
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.messageCantRecognizeYoutubeLink), Toast.LENGTH_SHORT).show();

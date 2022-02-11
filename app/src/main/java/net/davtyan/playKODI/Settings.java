@@ -108,9 +108,10 @@ public class Settings extends AppCompatActivity {
         if (hosts.size() > 1) {
             checkBoxUseDefaultHost.setChecked(mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false));
 
-            try {
-                spinnerDefaultHost.setSelection(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "")));
-            } catch (Exception e) {
+            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+            if (hostId >= 0) {
+                spinnerDefaultHost.setSelection(hostId);
+            } else {
                 checkBoxUseDefaultHost.setChecked(false);
                 spinnerDefaultHost.setSelection(0);
             }

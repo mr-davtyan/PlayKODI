@@ -11,12 +11,19 @@ import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+
+import com.google.gson.Gson;
 
 public class SendFormPlay extends Activity implements AsyncResponse {
 
@@ -54,32 +61,71 @@ public class SendFormPlay extends Activity implements AsyncResponse {
             }
         }
 
+
+
+
+
+
+
+        Gson gson = new Gson();
+        String json = mSettings.getString("hosts", "");
+        List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
+
         String[] requestParams = new String[10];
-//        requestParams[0] = APP_PREFERENCES_HOST;
-//        requestParams[1] = APP_PREFERENCES_PORT;
-//        requestParams[2] = APP_PREFERENCES_LOGIN;
-//        requestParams[3] = APP_PREFERENCES_PASS;
-//        requestParams[4] = textToPaste;
-//        requestParams[5] = "OPEN";
 
-        //coping to clipboard
-        if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("label", textToPaste);
-            Objects.requireNonNull(clipboard).setPrimaryClip(clip);
+        List<String> hostFullAddress = new ArrayList<>();
+        for (Host host : hosts) {
+            hostFullAddress.add(host.host + ":" + host.port);
         }
-        //preview the link
-        if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-            Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+        int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+        boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+        if (!useDefaultHost || hostId < 0){
+            Intent intentHostsList = new Intent(SendFormPlay.this, HostsListDialog.class);
+            intentHostsList.putExtra("link", textToPaste);
+            intentHostsList.putExtra("host", hosts.get(hostId).host);
+            intentHostsList.putExtra("port", hosts.get(hostId).port);
+            intentHostsList.putExtra("login", hosts.get(hostId).login);
+            intentHostsList.putExtra("password", hosts.get(hostId).password);
+            intentHostsList.putExtra("host", hosts.get(hostId).host);
+            intentHostsList.putExtra("event", "OPEN");
+            startActivity(intentHostsList);
+            finish();
+        }else{
+
+            requestParams[0] = hosts.get(hostId).host;
+            requestParams[1] = hosts.get(hostId).port;
+            requestParams[2] = hosts.get(hostId).login;
+            requestParams[3] = hosts.get(hostId).password;
+            requestParams[4] = textToPaste;
+
+
+
+
+
+
+            requestParams[5] = "OPEN";
+
+            //coping to clipboard
+            if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", textToPaste);
+                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
+            }
+            //preview the link
+            if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+            }
+
+            //send request to play
+            MakeRequest myMakeRequest = new MakeRequest();
+            myMakeRequest.execute(requestParams);
+            myMakeRequest.delegate = this;
+
+            finish();
         }
 
-        //send request to play
-        MakeRequest myMakeRequest = new MakeRequest();
-        myMakeRequest.execute(requestParams);
-        myMakeRequest.delegate = this;
 
-        finish();
     }
 
     @Override
@@ -96,8 +142,10 @@ public class SendFormPlay extends Activity implements AsyncResponse {
                         getResources().getString(R.string.messageNetworkError), Toast.LENGTH_SHORT).show();
                 break;
             default:
-                Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),
+//                        getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),output, Toast.LENGTH_SHORT).show();
+
                 break;
         }
     }

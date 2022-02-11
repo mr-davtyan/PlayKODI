@@ -2,9 +2,13 @@ package net.davtyan.playKODI;
 
 
 import static net.davtyan.playKODI.MyActivity.haveToCloseApp;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,9 +27,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
-public class Hosts extends AppCompatActivity {
+public class HostsListDialog extends AppCompatActivity  implements AsyncResponse {
     static final String APP_PREFERENCES = "MySettings";
     static final String APP_PREFERENCES_FIRST_RUN = "Run"; //
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
@@ -42,53 +47,34 @@ public class Hosts extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
-            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
-                case Configuration.UI_MODE_NIGHT_YES:
-                    setTheme(R.style.AppThemeDark);
-                    break;
-                case Configuration.UI_MODE_NIGHT_NO:
-                    setTheme(R.style.AppTheme);
-                    break;
-            }
-        } else {
-            if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) { //checking the theme
-                setTheme(R.style.AppTheme);
-            } else {
-                setTheme(R.style.AppThemeDark);
-            }
-        }
-        setContentView(R.layout.hosts);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        setTheme(R.style.HiddenTitleTheme);
+
         if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
-                    setTheme(R.style.AppThemeDark);
+                    setTheme(android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
                     break;
                 case Configuration.UI_MODE_NIGHT_NO:
-                    setTheme(R.style.AppTheme);
+                    setTheme(android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth);
                     break;
             }
         } else {
             if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) { //checking the theme
-                setTheme(R.style.AppTheme);
+                setTheme(android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth);
             } else {
-                setTheme(R.style.AppThemeDark);
+                setTheme(android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
             }
         }
-        setContentView(R.layout.hosts);
+
+        setContentView(R.layout.hosts_view_dialog);
 
         updateAdapter();
 
         list.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
-            intentHostEditor.putExtra("ID", position);
-            startActivity(intentHostEditor);
+            Intent intent = getIntent();
+            playLink(intent);
+            finish();
         });
         list.setOnItemLongClickListener((parent, view, position, id) -> {
             String title = hosts.get(position).nickName;
@@ -97,30 +83,21 @@ public class Hosts extends AppCompatActivity {
             }
             new AlertDialog.Builder(this)
                     .setTitle(title)
-                    .setPositiveButton("Edit", (dialog, whichButton) -> {
-                        Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
-                        intentHostEditor.putExtra("ID", position);
-                        startActivity(intentHostEditor);
+                    .setPositiveButton("Play Once", (dialog, whichButton) -> {
+                        Intent intent = getIntent();
+                        playLink(intent);
+                        finish();
                     })
-                    .setNegativeButton("Delete", (dialog, whichButton) -> {
+                    .setNegativeButton("Make Default Host and Play", (dialog, whichButton) -> {
                         SharedPreferences.Editor editor = mSettings.edit();
-                        String deletedHostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
-                        String defaultHostFromSettings = mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "");
-                        if (deletedHostFullAddress.equalsIgnoreCase(defaultHostFromSettings)) {
-                            editor = mSettings.edit();
-                            editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
-                            editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostAddressArr[0]);
-                            editor.apply();
-                            Toast.makeText(this, "Default host has been deleted!", Toast.LENGTH_LONG).show();
-                        }
-                        hosts.remove(position);
-                        Gson gson = new Gson();
-                        String json = gson.toJson(hosts);
-                        editor.putString("hosts", json);
+                        String hostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
+                        editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, true);
+                        editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostFullAddress);
                         editor.apply();
-                        updateAdapter();
-                        adapter.notifyDataSetChanged();
-                        list.invalidateViews();
+
+                        Intent intent = getIntent();
+                        playLink(intent);
+                        finish();
                     })
                     .show();
 
@@ -132,6 +109,34 @@ public class Hosts extends AppCompatActivity {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(APP_PREFERENCES_FIRST_RUN, hosts.size()==0);
         editor.apply();
+    }
+
+    public void playLink(Intent intent){
+        String textToPaste = intent.getExtras().getString("link");
+        String[] requestParams = new String[10];
+        requestParams[0] = intent.getExtras().getString("host");
+        requestParams[1] = intent.getExtras().getString("port");
+        requestParams[2] = intent.getExtras().getString("login");
+        requestParams[3] = intent.getExtras().getString("password");
+        requestParams[4] = textToPaste;
+        requestParams[5] = intent.getExtras().getString("event");
+
+        //coping to clipboard
+        if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("label", textToPaste);
+            Objects.requireNonNull(clipboard).setPrimaryClip(clip);
+        }
+        //preview the link
+        if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
+            Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+        }
+
+        //send request to play
+        MakeRequest myMakeRequest = new MakeRequest();
+        myMakeRequest.execute(requestParams);
+        myMakeRequest.delegate = this;
     }
 
     public void updateAdapter() {
@@ -168,7 +173,7 @@ public class Hosts extends AppCompatActivity {
         int id = view.getId();
 
         if (id == R.id.buttonAddHost) {
-            Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
+            Intent intentHostEditor = new Intent(HostsListDialog.this, HostEditor.class);
             if (hosts == null || hosts.size() == 0) {
                 intentHostEditor.putExtra("ID", 0);
             } else {
@@ -179,7 +184,7 @@ public class Hosts extends AppCompatActivity {
         } else if (id == R.id.buttonCloseHostList) {
             update_first_run();
             if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
-                Intent intentMyActivity = new Intent(Hosts.this, MyActivity.class);
+                Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
                 startActivity(intentMyActivity);
             } else {
                 haveToCloseApp = true;
@@ -192,11 +197,33 @@ public class Hosts extends AppCompatActivity {
     public void onBackPressed() { // Back button
         update_first_run();
         if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
-            Intent intentMyActivity = new Intent(Hosts.this, MyActivity.class);
+            Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
             startActivity(intentMyActivity);
         } else {
             haveToCloseApp = true;
         }
         finish();
     }
+
+    @Override
+    public void processFinish(String output) {
+        //toast messages about the result
+
+        switch (output) {
+            case "Illegal Argument ERROR":
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageLinkHaveWhitespace), Toast.LENGTH_SHORT).show();
+                break;
+            case "Network ERROR":
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageNetworkError), Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageLinkSuccess), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
 }
+

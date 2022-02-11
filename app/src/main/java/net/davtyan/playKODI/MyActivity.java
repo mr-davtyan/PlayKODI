@@ -49,6 +49,9 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     private String textToPaste = "";
     private SharedPreferences mSettings;
     private View spinnerView;
+    Spinner spinnerDefaultHost;
+    List<Host> hosts = new ArrayList<>();
+
 
     private static String extractYTId(String ytUrl) {
 
@@ -127,11 +130,14 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         appPreferencesLinkText = findViewById(R.id.editTextLink);
         appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
-        Spinner spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
+        spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
         spinnerView = findViewById(R.id.spinnerView);
+
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
-        List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
+
+        hosts.clear();
+        hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
 
         List<String> spinnerItems = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
@@ -146,11 +152,10 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
         spinnerDefaultHost.setAdapter(spinnerAdapter);
-        try {
-            spinnerDefaultHost.setSelection(hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "")));
-        } catch (Exception e) {
-            spinnerDefaultHost.setSelection(0);
-        }
+
+        int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+        spinnerDefaultHost.setSelection(Math.max(hostId, 0));
+
         spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -199,11 +204,11 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         String[] requestParams = new String[10];
-//        requestParams[0] = APP_PREFERENCES_HOST;
-//        requestParams[1] = APP_PREFERENCES_PORT;
-//        requestParams[2] = APP_PREFERENCES_LOGIN;
-//        requestParams[3] = APP_PREFERENCES_PASS;
-//        requestParams[4] = textToPaste;
+        requestParams[0] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).host;
+        requestParams[1] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).port;
+        requestParams[2] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).login;
+        requestParams[3] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).password;
+        requestParams[4] = textToPaste;
 
         if (id == R.id.buttonSendToKodi) {
             requestParams[5] = "OPEN";
