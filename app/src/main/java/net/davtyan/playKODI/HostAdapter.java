@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 
 class HostAdapter extends ArrayAdapter<String> {
@@ -30,15 +33,21 @@ class HostAdapter extends ArrayAdapter<String> {
         @SuppressLint("ViewHolder") View rowView = inflater.inflate(R.layout.host_list_item, parent, false);
 
         TextView titleText = (TextView) rowView.findViewById(R.id.name);
-        Button colorButton = (Button) rowView.findViewById(R.id.icon);
+        ImageView icon = (ImageView) rowView.findViewById(R.id.icon);
         TextView subtitleText = (TextView) rowView.findViewById(R.id.host);
 
-        titleText.setText(nickName[position]);
-        subtitleText.setText(host[position]);
+        if (nickName[position].equalsIgnoreCase("")){
+            titleText.setText(host[position]);
+            subtitleText.setVisibility(View.GONE);
+        }else{
+            titleText.setText(nickName[position]);
+            subtitleText.setText(host[position]);
+        }
+
         try {
-            colorButton.setBackgroundColor(Integer.decode(colorCode[position]));
+            icon.setColorFilter(Integer.decode(colorCode[position]));
         } catch (NumberFormatException e) {
-            colorButton.setBackgroundColor(-11889757);
+            icon.setColorFilter(-11889757);
         }
 
         return rowView;

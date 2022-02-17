@@ -47,3 +47,13 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+/Media addons/
+/gradle/
+/.idea/
+/app/sampledata/
+/app/build.gradle
+/app/app.iml
+/app/release/
+/app/proguard-rules.pro
+/gradlew
+/gradlew.bat
