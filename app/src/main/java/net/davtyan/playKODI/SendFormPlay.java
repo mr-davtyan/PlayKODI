@@ -61,12 +61,6 @@ public class SendFormPlay extends Activity implements AsyncResponse {
             }
         }
 
-
-
-
-
-
-
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
         List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
@@ -79,30 +73,18 @@ public class SendFormPlay extends Activity implements AsyncResponse {
         }
         int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
         boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+
         if (!useDefaultHost || hostId < 0){
             Intent intentHostsList = new Intent(SendFormPlay.this, HostsListDialog.class);
             intentHostsList.putExtra("link", textToPaste);
-            intentHostsList.putExtra("host", hosts.get(hostId).host);
-            intentHostsList.putExtra("port", hosts.get(hostId).port);
-            intentHostsList.putExtra("login", hosts.get(hostId).login);
-            intentHostsList.putExtra("password", hosts.get(hostId).password);
-            intentHostsList.putExtra("host", hosts.get(hostId).host);
             intentHostsList.putExtra("event", "OPEN");
             startActivity(intentHostsList);
-            finish();
         }else{
-
             requestParams[0] = hosts.get(hostId).host;
             requestParams[1] = hosts.get(hostId).port;
             requestParams[2] = hosts.get(hostId).login;
             requestParams[3] = hosts.get(hostId).password;
             requestParams[4] = textToPaste;
-
-
-
-
-
-
             requestParams[5] = "OPEN";
 
             //coping to clipboard
@@ -121,11 +103,8 @@ public class SendFormPlay extends Activity implements AsyncResponse {
             MakeRequest myMakeRequest = new MakeRequest();
             myMakeRequest.execute(requestParams);
             myMakeRequest.delegate = this;
-
-            finish();
         }
-
-
+        finish();
     }
 
     @Override

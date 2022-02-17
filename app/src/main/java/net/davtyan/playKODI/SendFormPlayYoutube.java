@@ -99,19 +99,13 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
             }
             int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
             boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+
             if (!useDefaultHost || hostId < 0) {
                 Intent intentHostsList = new Intent(SendFormPlayYoutube.this, HostsListDialog.class);
                 intentHostsList.putExtra("link", textToPastePlugin);
-                intentHostsList.putExtra("host", hosts.get(hostId).host);
-                intentHostsList.putExtra("port", hosts.get(hostId).port);
-                intentHostsList.putExtra("login", hosts.get(hostId).login);
-                intentHostsList.putExtra("password", hosts.get(hostId).password);
-                intentHostsList.putExtra("host", hosts.get(hostId).host);
-                intentHostsList.putExtra("event", "OPEN");
+                intentHostsList.putExtra("event", "YOUTUBE");
                 startActivity(intentHostsList);
-                finish();
             } else {
-
                 requestParams[0] = hosts.get(hostId).host;
                 requestParams[1] = hosts.get(hostId).port;
                 requestParams[2] = hosts.get(hostId).login;
@@ -119,14 +113,12 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
                 requestParams[4] = textToPastePlugin;
                 requestParams[5] = "OPEN";
 
-
                 //send request to play
                 MakeRequest myMakeRequest = new MakeRequest();
                 myMakeRequest.execute(requestParams);
                 myMakeRequest.delegate = this;
-
-                finish();
             }
+            finish();
 
         } else { //exit if not a youtube link
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.messageCantRecognizeYoutubeLink), Toast.LENGTH_SHORT).show();

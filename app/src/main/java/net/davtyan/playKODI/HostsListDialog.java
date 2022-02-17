@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -73,6 +72,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
 
         list.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = getIntent();
+            intent.putExtra("position", position);
             playLink(intent);
             finish();
         });
@@ -85,6 +85,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
                     .setTitle(title)
                     .setPositiveButton("Play Once", (dialog, whichButton) -> {
                         Intent intent = getIntent();
+                        intent.putExtra("position", position);
                         playLink(intent);
                         finish();
                     })
@@ -96,6 +97,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
                         editor.apply();
 
                         Intent intent = getIntent();
+                        intent.putExtra("position", position);
                         playLink(intent);
                         finish();
                     })
@@ -112,25 +114,32 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
     }
 
     public void playLink(Intent intent){
+        int position = intent.getExtras().getInt("position");
         String textToPaste = intent.getExtras().getString("link");
         String[] requestParams = new String[10];
-        requestParams[0] = intent.getExtras().getString("host");
-        requestParams[1] = intent.getExtras().getString("port");
-        requestParams[2] = intent.getExtras().getString("login");
-        requestParams[3] = intent.getExtras().getString("password");
-        requestParams[4] = textToPaste;
-        requestParams[5] = intent.getExtras().getString("event");
 
-        //coping to clipboard
-        if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("label", textToPaste);
-            Objects.requireNonNull(clipboard).setPrimaryClip(clip);
-        }
-        //preview the link
-        if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-            Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+        requestParams[0] = hosts.get(position).host;
+        requestParams[1] = hosts.get(position).port;
+        requestParams[2] = hosts.get(position).login;
+        requestParams[3] = hosts.get(position).password;
+        requestParams[4] = textToPaste;
+
+        String event = intent.getExtras().getString("event");
+        if (event.equalsIgnoreCase("YOUTUBE")){
+            requestParams[5] = "OPEN";
+        }else{
+            requestParams[5] = event;
+            //coping to clipboard
+            if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", textToPaste);
+                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
+            }
+            //preview the link
+            if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+            }
         }
 
         //send request to play
