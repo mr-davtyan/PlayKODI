@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -95,34 +94,44 @@ public class Hosts extends AppCompatActivity {
             if (title.equalsIgnoreCase("")) {
                 title = hosts.get(position).host;
             }
-            new AlertDialog.Builder(this)
-                    .setTitle(title)
-                    .setPositiveButton("Edit", (dialog, whichButton) -> {
-                        Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
-                        intentHostEditor.putExtra("ID", position);
-                        startActivity(intentHostEditor);
-                    })
-                    .setNegativeButton("Delete", (dialog, whichButton) -> {
-                        SharedPreferences.Editor editor = mSettings.edit();
-                        String deletedHostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
-                        String defaultHostFromSettings = mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "");
-                        if (deletedHostFullAddress.equalsIgnoreCase(defaultHostFromSettings)) {
-                            editor = mSettings.edit();
-                            editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
-                            editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostAddressArr[0]);
-                            editor.apply();
-                            Toast.makeText(this, "Default host has been deleted!", Toast.LENGTH_LONG).show();
-                        }
-                        hosts.remove(position);
-                        Gson gson = new Gson();
-                        String json = gson.toJson(hosts);
-                        editor.putString("hosts", json);
-                        editor.apply();
-                        updateAdapter();
-                        adapter.notifyDataSetChanged();
-                        list.invalidateViews();
-                    })
-                    .show();
+            AlertDialog.Builder hostDialog = new AlertDialog.Builder(this);
+            hostDialog.setTitle(title);
+            hostDialog.setPositiveButton("Edit", (dialog, whichButton) -> {
+                Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
+                intentHostEditor.putExtra("ID", position);
+                startActivity(intentHostEditor);
+            });
+            if (hosts.size() > 1) {
+                hostDialog.setNeutralButton("Make Default", (dialog, whichButton) -> {
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    String hostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
+                    editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostFullAddress);
+                    editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, true);
+                    editor.apply();
+                    Toast.makeText(this, hostFullAddress + " has been assigned as default", Toast.LENGTH_LONG).show();
+                });
+            }
+            hostDialog.setNegativeButton("Delete", (dialog, whichButton) -> {
+                SharedPreferences.Editor editor = mSettings.edit();
+                String deletedHostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
+                String defaultHostFromSettings = mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "");
+                if (deletedHostFullAddress.equalsIgnoreCase(defaultHostFromSettings)) {
+                    editor = mSettings.edit();
+                    editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+                    editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostAddressArr[0]);
+                    editor.apply();
+                    Toast.makeText(this, "Default host has been deleted!", Toast.LENGTH_LONG).show();
+                }
+                hosts.remove(position);
+                Gson gson = new Gson();
+                String json = gson.toJson(hosts);
+                editor.putString("hosts", json);
+                editor.apply();
+                updateAdapter();
+                adapter.notifyDataSetChanged();
+                list.invalidateViews();
+            });
+            hostDialog.show();
 
             return true;
         });
@@ -130,7 +139,7 @@ public class Hosts extends AppCompatActivity {
 
     public void update_first_run() {
         SharedPreferences.Editor editor = mSettings.edit();
-        editor.putBoolean(APP_PREFERENCES_FIRST_RUN, hosts.size()==0);
+        editor.putBoolean(APP_PREFERENCES_FIRST_RUN, hosts.size() == 0);
         editor.apply();
     }
 

@@ -1,11 +1,11 @@
 package net.davtyan.playKODI;
 
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
-
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
 
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -48,7 +49,6 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     private EditText appPreferencesLinkText;
     private String textToPaste = "";
     private SharedPreferences mSettings;
-    private View spinnerView;
     Spinner spinnerDefaultHost;
     List<Host> hosts = new ArrayList<>();
 
@@ -131,7 +131,6 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
 
         spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
-        spinnerView = findViewById(R.id.spinnerView);
 
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
@@ -145,7 +144,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
 
         for (Host host : hosts) {
             String fullName = host.host + ":" + host.port;
-            if (!host.nickName.equals("")) fullName = host.nickName + " (" + fullName + " )";
+            if (!host.nickName.equals("")) fullName = host.nickName;
             spinnerItems.add(fullName);
             colorCodes.add(host.color);
             hostFullAddress.add(host.host + ":" + host.port);
@@ -153,22 +152,23 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
         spinnerDefaultHost.setAdapter(spinnerAdapter);
 
-        int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
-        spinnerDefaultHost.setSelection(Math.max(hostId, 0));
+        if (mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false)){
+            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+            spinnerDefaultHost.setSelection(Math.max(hostId, 0));
+        }else{
+            spinnerDefaultHost.setSelection(0);
+        }
 
         spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerView.setBackgroundColor(Integer.decode(colorCodes.get(position)));
+                ImageView spinnerIcon = (ImageView) findViewById(R.id.spinnerIcon);
+                spinnerIcon.setColorFilter(Integer.decode(colorCodes.get(position)));
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
-
         });
-
 
     }
 
@@ -185,7 +185,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
         }
 
-//            prepare smb link
+//            making smb link
         if (textToPaste.contains("%")) {
             try {
                 textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
