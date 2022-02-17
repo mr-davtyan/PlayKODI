@@ -92,7 +92,7 @@ public class Hosts extends AppCompatActivity {
         list.setOnItemLongClickListener((parent, view, position, id) -> {
             String title = hosts.get(position).nickName;
             if (title.equalsIgnoreCase("")) {
-                title = hosts.get(position).host;
+                title = hosts.get(position).host + ":" + hosts.get(position).port;
             }
             AlertDialog.Builder hostDialog = new AlertDialog.Builder(this);
             hostDialog.setTitle(title);

@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.ColorPickerView;
+import com.skydoves.colorpickerview.flag.BubbleFlag;
+import com.skydoves.colorpickerview.flag.FlagMode;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 import java.util.ArrayList;
@@ -142,7 +145,7 @@ public class HostEditor extends AppCompatActivity {
             startActivity(intentHosts);
             finish();
         } else if (id == R.id.buttonColorPicker) {  // exit button
-            new ColorPickerDialog.Builder(this)
+            ColorPickerDialog.Builder builder = new ColorPickerDialog.Builder(this)
                     .setTitle(editTextNickname.getText().toString())
                     .setPositiveButton(getString(R.string.confirm),
                             (ColorEnvelopeListener) (envelope, fromUser) -> {
@@ -154,7 +157,14 @@ public class HostEditor extends AppCompatActivity {
                     .attachAlphaSlideBar(false) // the default value is true.
                     .attachBrightnessSlideBar(false)  // the default value is true.
                     .setBottomSpace(12) // set a bottom space between the last slide bar and buttons.
-                    .show();
+                    .setColorPickerView(new ColorPickerView(this));
+
+            ColorPickerView colorPickerView = builder.getColorPickerView();
+            BubbleFlag bubbleFlag = new BubbleFlag(this);
+            bubbleFlag.setFlagMode(FlagMode.ALWAYS);
+            colorPickerView.setFlagView(bubbleFlag);
+            colorPickerView.setInitialColor(Integer.decode(editTextColorCode.getText().toString()));
+            builder.show(); // shows the dialog
         }
     }
 }
