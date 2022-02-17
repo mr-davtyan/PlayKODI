@@ -93,14 +93,15 @@ public class SendFormPlay extends Activity implements AsyncResponse {
                 ClipData clip = ClipData.newPlainText("label", textToPaste);
                 Objects.requireNonNull(clipboard).setPrimaryClip(clip);
             }
+
+            String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
+            if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
+            String toastMessage = getResources().getString(R.string.messageSendingLink) + " " + fullName;
             //preview the link
             if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-                String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
-                if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
-                Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.messageSendingLink) + " " + fullName + "\n" + textToPaste,
-                        Toast.LENGTH_SHORT).show();
+                toastMessage = toastMessage + "\n" + textToPaste;
             }
+            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
 
             //send request to play
             MakeRequest myMakeRequest = new MakeRequest();
