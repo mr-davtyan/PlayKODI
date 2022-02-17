@@ -96,22 +96,22 @@ public class Hosts extends AppCompatActivity {
             }
             AlertDialog.Builder hostDialog = new AlertDialog.Builder(this);
             hostDialog.setTitle(title);
-            hostDialog.setPositiveButton("Edit", (dialog, whichButton) -> {
+            hostDialog.setPositiveButton(R.string.edit, (dialog, whichButton) -> {
                 Intent intentHostEditor = new Intent(Hosts.this, HostEditor.class);
                 intentHostEditor.putExtra("ID", position);
                 startActivity(intentHostEditor);
             });
             if (hosts.size() > 1) {
-                hostDialog.setNeutralButton("Make Default", (dialog, whichButton) -> {
+                hostDialog.setNeutralButton(R.string.make_default, (dialog, whichButton) -> {
                     SharedPreferences.Editor editor = mSettings.edit();
                     String hostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
                     editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostFullAddress);
                     editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, true);
                     editor.apply();
-                    Toast.makeText(this, hostFullAddress + " has been assigned as default", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, hostFullAddress + " " + getResources().getString(R.string.has_assigned_as_default), Toast.LENGTH_LONG).show();
                 });
             }
-            hostDialog.setNegativeButton("Delete", (dialog, whichButton) -> {
+            hostDialog.setNegativeButton(R.string.delete, (dialog, whichButton) -> {
                 SharedPreferences.Editor editor = mSettings.edit();
                 String deletedHostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
                 String defaultHostFromSettings = mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, "");
@@ -120,7 +120,7 @@ public class Hosts extends AppCompatActivity {
                     editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
                     editor.putString(APP_PREFERENCES_DEFAULT_HOST, hostAddressArr[0]);
                     editor.apply();
-                    Toast.makeText(this, "Default host has been deleted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getResources().getString(R.string.default_host_deleted), Toast.LENGTH_LONG).show();
                 }
                 hosts.remove(position);
                 Gson gson = new Gson();

@@ -25,7 +25,6 @@ class MakeRequest extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         String response;
-//        todo update all MakeRequest to include basicAuth as 3rd param
         String APP_PREFERENCES_HOST = params[0];
         String APP_PREFERENCES_PORT = params[1];
         String APP_PREFERENCES_LOGIN = params[2];
@@ -95,7 +94,6 @@ class MakeRequest extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String result) {
         delegate.processFinish(result);
     }
-
 
 }
 

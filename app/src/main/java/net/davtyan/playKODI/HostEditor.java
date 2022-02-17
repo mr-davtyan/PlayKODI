@@ -106,7 +106,7 @@ public class HostEditor extends AppCompatActivity {
         int id = v.getId();
         if (id == R.id.buttonHostSave) {  // save button
             if(editTextHost.getText().toString().equalsIgnoreCase("")){
-                Toast.makeText(getApplicationContext(), "Please enter IP address and Port first.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_ip_first), Toast.LENGTH_SHORT).show();
                 return;
             }
             Host newHost = new Host(

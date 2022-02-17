@@ -83,13 +83,13 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
             }
             new AlertDialog.Builder(this)
                     .setTitle(title)
-                    .setPositiveButton("Play Once", (dialog, whichButton) -> {
+                    .setPositiveButton(R.string.play_once, (dialog, whichButton) -> {
                         Intent intent = getIntent();
                         intent.putExtra("position", position);
                         playLink(intent);
                         finish();
                     })
-                    .setNegativeButton("Make Default Host and Play", (dialog, whichButton) -> {
+                    .setNegativeButton(R.string.make_default_and_play, (dialog, whichButton) -> {
                         SharedPreferences.Editor editor = mSettings.edit();
                         String hostFullAddress = hosts.get(position).host + ":" + hosts.get(position).port;
                         editor.putBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, true);

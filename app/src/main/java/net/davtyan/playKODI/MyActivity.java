@@ -69,7 +69,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         if (exit) {
             finish();
         } else {
-            mySnackbar.setText("Press Back again for Exit").show();
+            mySnackbar.setText(R.string.press_back_again_to_exit).show();
             exit = true;
             new Handler().postDelayed(() -> exit = false, 2 * 1000);
         }
@@ -114,7 +114,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && !haveToCloseApp) {
-            Toast.makeText(this, "Please add at least one KODI host", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MyActivity.this, Hosts.class);
             startActivity(intent);
         } else if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && haveToCloseApp) {
