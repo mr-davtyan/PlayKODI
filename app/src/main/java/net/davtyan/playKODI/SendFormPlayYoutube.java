@@ -5,6 +5,7 @@ import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
 
 import android.app.Activity;
@@ -112,6 +113,15 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
                 requestParams[3] = hosts.get(hostId).password;
                 requestParams[4] = textToPastePlugin;
                 requestParams[5] = "OPEN";
+
+                //preview the link
+                if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
+                    String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
+                    if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.messageSendingLink) + " " + fullName,
+                            Toast.LENGTH_SHORT).show();
+                }
 
                 //send request to play
                 MakeRequest myMakeRequest = new MakeRequest();

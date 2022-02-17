@@ -35,7 +35,7 @@
     <string name="buttonSendToKodi">Играть</string>
     <string name="checkBoxFollowSystemDarkMode">Оформление в соответствии с ситемными настройка</string>
     <string name="hintLinkField">Вставьте или введите прямую ссылку для отправки в медиацентр</string>
-    <string name="messageSendingLink">Ссылка отправлена</string>
+    <string name="messageSendingLink">Ссылка отправлена на</string>
     <string name="checkBoxPreviewLink">Показывать ссылку после отправки</string>
     <string name="edit_hosts">Edit Hosts</string>
     <string name="add_host">Add Host</string>

@@ -95,8 +95,11 @@ public class SendFormPlay extends Activity implements AsyncResponse {
             }
             //preview the link
             if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
+                String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
+                if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
                 Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.messageSendingLink) + " " + fullName + "\n" + textToPaste,
+                        Toast.LENGTH_SHORT).show();
             }
 
             //send request to play
