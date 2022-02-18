@@ -53,8 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="20dp"
-                    android:autofillHints="Nickname"
-                    android:hint="Nickname"
+                    android:autofillHints="@string/nickname"
+                    android:hint="@string/nickname"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -86,7 +86,20 @@
                 android:autofillHints="editTextPort"
                 android:hint="@string/editTextPort"
                 android:inputType="number"
-                android:text="8080" />
+                android:text="@string/_8080" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTextLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="editTextLogin"
+                android:hint="@string/editTextLogin"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -103,19 +116,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/editTextLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="editTextLogin"
-                android:hint="@string/editTextLogin"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <LinearLayout
             android:id="@+id/buttonsRow"
             android:layout_width="fill_parent"
@@ -130,7 +130,7 @@
                 android:layout_margin="4sp"
                 android:layout_weight="2"
                 android:onClick="onClick"
-                android:text="Exit"
+                android:text="@string/exit"
                 android:textAlignment="center" />
 
             <Button
@@ -141,7 +141,7 @@
                 android:layout_margin="4sp"
                 android:layout_weight="2"
                 android:onClick="onClick"
-                android:text="Delete"
+                android:text="@string/delete"
                 android:textAlignment="center" />
 
             <Button
@@ -152,7 +152,7 @@
                 android:layout_margin="4sp"
                 android:layout_weight="2"
                 android:onClick="onClick"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAlignment="center" />
         </LinearLayout>
 

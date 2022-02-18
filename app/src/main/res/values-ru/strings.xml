@@ -52,4 +52,9 @@
     <string name="make_default_and_play">Сделать по-умолчанию и играть</string>
     <string name="press_back_again_to_exit">Нажмите назад для выхода</string>
     <string name="please_add_one_host">Добавьте хотя-бы один KODI Хост</string>
+    <string name="nickname">Nickname</string>
+    <string name="_8080">8080</string>
+    <string name="exit">Exit</string>
+    <string name="save">Save</string>
+    <string name="icon">Icon</string>
 </resources>

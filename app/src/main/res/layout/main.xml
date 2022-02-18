@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:autofillHints=""
+        android:layout_marginTop="20sp"
         android:hint="@string/hintLinkField"
         android:inputType="textMultiLine"
         android:minLines="4"
@@ -54,7 +55,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/spinnerDefaultHost"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/spinnerDefaultHost"
-            app:srcCompat="@drawable/ic_kodi_logo" />
+            app:srcCompat="@drawable/ic_kodi_logo"
+            android:contentDescription="@string/icon" />
 
         <Spinner
             android:id="@+id/spinnerDefaultHost"

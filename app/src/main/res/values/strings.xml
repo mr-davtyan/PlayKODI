@@ -53,4 +53,9 @@
     <string name="make_default_and_play">Make Default Host and Play</string>
     <string name="press_back_again_to_exit">Press Back again for Exit</string>
     <string name="please_add_one_host">Please add at least one KODI host</string>
+    <string name="nickname">Nickname</string>
+    <string name="_8080">8080</string>
+    <string name="exit">Exit</string>
+    <string name="save">Save</string>
+    <string name="icon">Icon</string>
 </resources>
