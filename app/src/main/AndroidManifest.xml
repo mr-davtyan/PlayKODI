@@ -44,7 +44,7 @@
         <activity
             android:name=".Hosts"
             android:launchMode="singleTask"
-            android:label="Hosts"
+            android:label="@string/hosts"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -59,7 +59,7 @@
         <activity
             android:name=".HostEditor"
             android:launchMode="singleTask"
-            android:label="KODI Host"
+            android:label="KODI"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

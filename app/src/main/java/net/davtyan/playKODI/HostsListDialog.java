@@ -47,7 +47,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
 
         setTheme(R.style.Theme_Transparent);
 
-        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
+        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, true)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
                     setTheme(android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);

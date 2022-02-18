@@ -44,7 +44,7 @@ public class Settings extends AppCompatActivity {
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
+        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, true)) {
             switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
                 case Configuration.UI_MODE_NIGHT_YES:
                     setTheme(R.style.AppThemeDark);
