@@ -68,6 +68,13 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
 
         updateAdapter();
 
+        if (hosts.size()==1){
+            Intent intent = getIntent();
+            intent.putExtra("position", 0);
+            playLink(intent);
+            finish();
+        }
+
         list.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = getIntent();
             intent.putExtra("position", position);
