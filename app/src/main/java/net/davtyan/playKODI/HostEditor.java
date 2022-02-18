@@ -69,7 +69,9 @@ public class HostEditor extends AppCompatActivity {
 
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
-        hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        if (!json.equalsIgnoreCase("")) {
+            hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        }
 
         editTextNickname = findViewById(R.id.editTextName);
         editTextHost = findViewById(R.id.editTextHost);

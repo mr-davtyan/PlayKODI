@@ -1,7 +1,6 @@
 package net.davtyan.playKODI;
 
 
-import static net.davtyan.playKODI.MyActivity.haveToCloseApp;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
@@ -31,7 +30,6 @@ import java.util.Objects;
 
 public class HostsListDialog extends AppCompatActivity  implements AsyncResponse {
     static final String APP_PREFERENCES = "MySettings";
-    static final String APP_PREFERENCES_FIRST_RUN = "Run"; //
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
     static final String APP_PREFERENCES_THEME_DARK_AUTO = "AutoTheme"; //
     private static SharedPreferences mSettings;
@@ -107,12 +105,6 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
         });
     }
 
-    public void update_first_run() {
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putBoolean(APP_PREFERENCES_FIRST_RUN, hosts.size()==0);
-        editor.apply();
-    }
-
     public void playLink(Intent intent){
         int position = intent.getExtras().getInt("position");
         String textToPaste = intent.getExtras().getString("link");
@@ -152,7 +144,12 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
         hosts.clear();
-        hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        if (!json.equalsIgnoreCase("")) {
+            hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        }
+        if (hosts.size() == 0) {
+            finish();
+        }
 
         List<String> hostNickname = new ArrayList<>();
         List<String> hostAddress = new ArrayList<>();
@@ -175,7 +172,6 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
                 colorCodesArr);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
-        update_first_run();
     }
 
     public void onClick(View view) {
@@ -191,12 +187,9 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
             startActivity(intentHostEditor);
 
         } else if (id == R.id.buttonCloseHostList) {
-            update_first_run();
-            if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
+            if (hosts.size() > 0) {
                 Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
                 startActivity(intentMyActivity);
-            } else {
-                haveToCloseApp = true;
             }
             finish();
         }
@@ -204,12 +197,9 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
     }
 
     public void onBackPressed() { // Back button
-        update_first_run();
-        if (!mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {
+        if (hosts.size() > 0) {
             Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
             startActivity(intentMyActivity);
-        } else {
-            haveToCloseApp = true;
         }
         finish();
     }

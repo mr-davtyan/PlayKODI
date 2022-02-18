@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
-import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
@@ -34,12 +33,6 @@ public class SendFormPlay extends Activity implements AsyncResponse {
 
         SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         MyActivity.convertHostToList(mSettings);
-
-        if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true)) {  //if preference are not set - exit
-            Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.messageSettingsWasntSetup), Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
         String textToPaste = Objects.requireNonNull(intent.getData()).toString();
 
@@ -63,8 +56,15 @@ public class SendFormPlay extends Activity implements AsyncResponse {
 
         Gson gson = new Gson();
         String json = mSettings.getString("hosts", "");
-        List<Host> hosts = new ArrayList<>(Arrays.asList(gson.fromJson(json, Host[].class)));
-
+        List<Host> hosts = new ArrayList<>();
+        if (!json.equalsIgnoreCase("")) {
+            hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        }
+        if (hosts.size() == 0) {
+            Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(SendFormPlay.this, Hosts.class));
+            finish();
+        }
         String[] requestParams = new String[10];
 
         List<String> hostFullAddress = new ArrayList<>();

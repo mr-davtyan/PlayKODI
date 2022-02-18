@@ -1,6 +1,5 @@
 package net.davtyan.playKODI;
 
-import static net.davtyan.playKODI.Hosts.APP_PREFERENCES_FIRST_RUN;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
@@ -42,13 +41,11 @@ import java.util.regex.Pattern;
 
 public class MyActivity extends AppCompatActivity implements AsyncResponse {
 
-    static boolean haveToCloseApp = false;
     Snackbar mySnackbar;
     private Boolean exit = false;
     private Boolean darkMode = false;
     private EditText appPreferencesLinkText;
     private String textToPaste = "";
-    private SharedPreferences mSettings;
     Spinner spinnerDefaultHost;
     List<Host> hosts = new ArrayList<>();
 
@@ -78,8 +75,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         convertHostToList(mSettings);
 
         //checking the current theme
@@ -105,70 +101,6 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         setContentView(R.layout.main);
-
-        mySnackbar = Snackbar.make(findViewById(R.id.mainLayout), "", Snackbar.LENGTH_SHORT);
-        if (darkMode) { //check the theme
-            mySnackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.black_alpha));
-        } else {
-            mySnackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.navigationBarColor));
-        }
-
-        if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && !haveToCloseApp) {
-            Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MyActivity.this, Hosts.class);
-            startActivity(intent);
-        } else if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) && haveToCloseApp) {
-            finish();
-        }
-
-        //initializing clipboard
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if (Objects.requireNonNull(clipboard).hasPrimaryClip()) {
-            textToPaste = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0).coerceToText(this).toString();
-        }
-
-        appPreferencesLinkText = findViewById(R.id.editTextLink);
-        appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
-
-        spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
-
-        Gson gson = new Gson();
-        String json = mSettings.getString("hosts", "");
-
-        hosts.clear();
-        hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
-
-        List<String> spinnerItems = new ArrayList<>();
-        List<String> colorCodes = new ArrayList<>();
-        List<String> hostFullAddress = new ArrayList<>();
-
-        for (Host host : hosts) {
-            String fullName = host.host + ":" + host.port;
-            if (!host.nickName.equals("")) fullName = host.nickName;
-            spinnerItems.add(fullName);
-            colorCodes.add(host.color);
-            hostFullAddress.add(host.host + ":" + host.port);
-        }
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
-        spinnerDefaultHost.setAdapter(spinnerAdapter);
-
-        if (mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false)){
-            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
-            spinnerDefaultHost.setSelection(Math.max(hostId, 0));
-        }else{
-            spinnerDefaultHost.setSelection(0);
-        }
-
-        spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ImageView spinnerIcon = (ImageView) findViewById(R.id.spinnerIcon);
-                spinnerIcon.setColorFilter(Integer.decode(colorCodes.get(position)));
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
 
     }
 
@@ -225,18 +157,98 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     protected void onResume() {
         super.onResume();
 
-        if (mSettings.getBoolean(APP_PREFERENCES_FIRST_RUN, true) & haveToCloseApp) {
-            haveToCloseApp = false;
+        SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        convertHostToList(mSettings);
+
+        //checking the current theme
+        if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK_AUTO, false)) {
+            switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    setTheme(R.style.AppThemeDark);
+                    darkMode = true;
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    setTheme(R.style.AppTheme);
+                    darkMode = false;
+                    break;
+            }
+        } else {
+            if (mSettings.getBoolean(APP_PREFERENCES_THEME_DARK, true)) {
+                setTheme(R.style.AppTheme);
+                darkMode = false;
+            } else {
+                setTheme(R.style.AppThemeDark);
+                darkMode = true;
+            }
+        }
+
+        setContentView(R.layout.main);
+
+        mySnackbar = Snackbar.make(findViewById(R.id.mainLayout), "", Snackbar.LENGTH_SHORT);
+        if (darkMode) { //check the theme
+            mySnackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.black_alpha));
+        } else {
+            mySnackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.navigationBarColor));
+        }
+
+        Gson gson = new Gson();
+        String json = mSettings.getString("hosts", "");
+
+        hosts.clear();
+        if (!json.equalsIgnoreCase("")) {
+            hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        }
+
+        if (hosts.size() == 0) {
+            Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(MyActivity.this, Hosts.class));
             finish();
         }
 
+        //initializing clipboard
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (Objects.requireNonNull(clipboard).hasPrimaryClip()) {
             textToPaste = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0).coerceToText(this).toString();
         }
 
         appPreferencesLinkText = findViewById(R.id.editTextLink);
-        appPreferencesLinkText.setText(textToPaste);// вставить текст из буфера
+        appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
+
+        spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
+
+
+
+        List<String> spinnerItems = new ArrayList<>();
+        List<String> colorCodes = new ArrayList<>();
+        List<String> hostFullAddress = new ArrayList<>();
+
+        for (Host host : hosts) {
+            String fullName = host.host + ":" + host.port;
+            if (!host.nickName.equals("")) fullName = host.nickName;
+            spinnerItems.add(fullName);
+            colorCodes.add(host.color);
+            hostFullAddress.add(host.host + ":" + host.port);
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, spinnerItems);
+        spinnerDefaultHost.setAdapter(spinnerAdapter);
+
+        if (mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false)){
+            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+            spinnerDefaultHost.setSelection(Math.max(hostId, 0));
+        }else{
+            spinnerDefaultHost.setSelection(0);
+        }
+
+        spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                ImageView spinnerIcon = (ImageView) findViewById(R.id.spinnerIcon);
+                spinnerIcon.setColorFilter(Integer.decode(colorCodes.get(position)));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
     }
 
     @Override
