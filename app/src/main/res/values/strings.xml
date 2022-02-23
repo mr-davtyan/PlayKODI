@@ -61,4 +61,6 @@
     <string name="hosts">Hosts</string>
     <string name="always_use_default_host_for_share_button">Always use default host for \'Share Button\'</string>
     <string name="default_host">Default</string>
+    <string name="_11889757">-11889757</string>
+    <string name="hiddencolorcode">HiddenColorCode</string>
 </resources>
