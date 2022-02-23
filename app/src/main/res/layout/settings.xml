@@ -77,7 +77,7 @@
                 android:checked="false"
                 android:clickable="true"
                 android:enabled="true"
-                android:text="Always use default host for 'Share Button'"
+                android:text="@string/always_use_default_host_for_share_button"
                 android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -86,7 +86,7 @@
                 android:id="@+id/textViewDefaultHost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Default Host"
+                android:text="@string/default_host"
                 android:layout_marginStart="10sp"
                 app:layout_constraintTop_toTopOf="@+id/spinnerDefaultHost"
                 app:layout_constraintBottom_toBottomOf="@id/spinnerDefaultHost"

@@ -125,7 +125,7 @@
             <Button
                 android:id="@+id/buttonHostCancel"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4sp"
                 android:layout_weight="2"
@@ -136,7 +136,7 @@
             <Button
                 android:id="@+id/buttonHostDelete"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4sp"
                 android:layout_weight="2"
@@ -147,10 +147,10 @@
             <Button
                 android:id="@+id/buttonHostSave"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4sp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:onClick="onClick"
                 android:text="@string/save"
                 android:textAlignment="center" />

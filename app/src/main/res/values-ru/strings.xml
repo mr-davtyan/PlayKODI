@@ -34,7 +34,7 @@
     <string name="activitySendQueueYoutube">playKODI Очередь YouTube</string>
     <string name="buttonSendToKodi">Играть</string>
     <string name="checkBoxFollowSystemDarkMode">Оформление в соответствии с системными настройками</string>
-    <string name="hintLinkField">Вставьте или введите прямую ссылку для отправки в медиацентр</string>
+    <string name="hintLinkField">Вставьте или введите прямую ссылку</string>
     <string name="messageSendingLink">Ссылка отправлена на</string>
     <string name="checkBoxPreviewLink">Показывать ссылку после отправки</string>
     <string name="edit_hosts">Список Хостов</string>
@@ -58,4 +58,6 @@
     <string name="save">Сохранить</string>
     <string name="icon">Логотип</string>
     <string name="hosts">Хосты</string>
+    <string name="always_use_default_host_for_share_button">Всегда использовать хост по-умолчанию для кнопки \'Поделиться\'</string>
+    <string name="default_host">По-умолчанию</string>
 </resources>

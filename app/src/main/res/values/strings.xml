@@ -36,7 +36,7 @@
     <string name="messageCantRecognizeYoutubeLink">WARNING! The link was Not recognized as Youtube!</string>
     <string name="checkBoxCopyToClipboard">Copy links to clipboard</string>
     <string name="messageSettingsWasntSetup">App Settings were not setup properly. Run playKODI and check settings.</string>
-    <string name="hintLinkField">Insert or enter a direct link to send to the media center.</string>
+    <string name="hintLinkField">Insert or enter a direct link</string>
     <string name="messageSendingLink">Link sent to</string>
     <string name="edit_hosts">Edit Hosts</string>
     <string name="add_host">Add Host</string>
@@ -59,4 +59,6 @@
     <string name="save">Save</string>
     <string name="icon">Icon</string>
     <string name="hosts">Hosts</string>
+    <string name="always_use_default_host_for_share_button">Always use default host for \'Share Button\'</string>
+    <string name="default_host">Default</string>
 </resources>
