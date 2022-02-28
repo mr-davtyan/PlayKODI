@@ -134,11 +134,15 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
                 ClipData clip = ClipData.newPlainText("label", textToPaste);
                 Objects.requireNonNull(clipboard).setPrimaryClip(clip);
             }
+
+            String fullName = hosts.get(position).host + ":" + hosts.get(position).port;
+            if (!hosts.get(position).nickName.equals("")) fullName = hosts.get(position).nickName;
+            String toastMessage = getResources().getString(R.string.messageSendingLink) + " " + fullName;
             //preview the link
             if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-                Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.messageSendingLink) + ":\n" + textToPaste, Toast.LENGTH_SHORT).show();
+                toastMessage = toastMessage + "\n" + textToPaste;
             }
+            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
         }
 
         //send request to play

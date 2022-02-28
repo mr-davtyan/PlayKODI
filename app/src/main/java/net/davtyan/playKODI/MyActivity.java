@@ -242,7 +242,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         spinnerDefaultHost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ImageView spinnerIcon = (ImageView) findViewById(R.id.spinnerIcon);
+                ImageView spinnerIcon = findViewById(R.id.spinnerIcon);
                 spinnerIcon.setColorFilter(Integer.decode(colorCodes.get(position)));
             }
             @Override
