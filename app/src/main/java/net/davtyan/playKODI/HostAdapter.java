@@ -29,9 +29,9 @@ class HostAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
         @SuppressLint("ViewHolder") View rowView = inflater.inflate(R.layout.host_list_item, parent, false);
 
-        TextView titleText = (TextView) rowView.findViewById(R.id.name);
-        ImageView icon = (ImageView) rowView.findViewById(R.id.icon);
-        TextView subtitleText = (TextView) rowView.findViewById(R.id.host);
+        TextView titleText = rowView.findViewById(R.id.name);
+        ImageView icon = rowView.findViewById(R.id.icon);
+        TextView subtitleText = rowView.findViewById(R.id.host);
 
         if (nickName[position].equalsIgnoreCase("")){
             titleText.setText(host[position]);

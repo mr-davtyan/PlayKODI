@@ -79,7 +79,7 @@ public class Hosts extends AppCompatActivity {
             }
         }
         setContentView(R.layout.hosts);
-        list = (ListView) findViewById(R.id.list);
+        list = findViewById(R.id.list);
 
         updateAdapter();
 

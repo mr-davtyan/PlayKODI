@@ -181,7 +181,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
                 hostNicknameArr,
                 hostAddressArr,
                 colorCodesArr);
-        list = (ListView) findViewById(R.id.list);
+        list = findViewById(R.id.list);
         list.setAdapter(adapter);
     }
 

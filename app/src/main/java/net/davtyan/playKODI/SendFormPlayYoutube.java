@@ -125,12 +125,11 @@ public class SendFormPlayYoutube extends Activity implements AsyncResponse {
                 myMakeRequest.execute(requestParams);
                 myMakeRequest.delegate = this;
             }
-            finish();
 
         } else { //exit if not a youtube link
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.messageCantRecognizeYoutubeLink), Toast.LENGTH_SHORT).show();
-            finish();
         }
+        finish();
     }
 
     @Override
