@@ -5,8 +5,8 @@ import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+import static net.davtyan.playKODI.Util.extractYTId;
 
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,9 +34,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MyActivity extends AppCompatActivity implements AsyncResponse {
@@ -45,21 +42,8 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
     private Boolean exit = false;
     private Boolean darkMode = false;
     private EditText appPreferencesLinkText;
-    private String textToPaste = "";
     Spinner spinnerDefaultHost;
     List<Host> hosts = new ArrayList<>();
-
-
-    private static String extractYTId(String ytUrl) {
-
-        String vId = "";
-        Pattern pattern = Pattern.compile(".*(?:youtu.be/|v/|u/\\w/|embed/|watch\\?v=)([^#&?]*).*");
-        Matcher matcher = pattern.matcher(ytUrl);
-        if (matcher.matches()) {
-            vId = matcher.group(1);
-        }
-        return vId;
-    }
 
     @Override
     public void onBackPressed() {
@@ -99,15 +83,14 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
                 darkMode = true;
             }
         }
-
         setContentView(R.layout.main);
-
     }
 
     public void onClick(View view) {
         int id = view.getId();
 
-        textToPaste = appPreferencesLinkText.getText().toString();
+        String textToPaste = appPreferencesLinkText.getText().toString();
+
         if (textToPaste.equals("")) {
             mySnackbar.setText(getResources().getString(R.string.messageLinkHaveWhitespace)).show();
             return;
@@ -117,7 +100,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
         }
 
-//            making smb link
+//      making smb link
         if (textToPaste.contains("%")) {
             try {
                 textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
@@ -151,7 +134,6 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
         MakeRequest myMakeRequest = new MakeRequest();
         myMakeRequest.execute(requestParams);
         myMakeRequest.delegate = this;
-
     }
 
     protected void onResume() {
@@ -205,15 +187,7 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             finish();
         }
 
-        //initializing clipboard
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if (Objects.requireNonNull(clipboard).hasPrimaryClip()) {
-            textToPaste = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0).coerceToText(this).toString();
-        }
-
         appPreferencesLinkText = findViewById(R.id.editTextLink);
-        appPreferencesLinkText.setText(textToPaste); // paste text from clipboard
-
         spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
 
         List<String> spinnerItems = new ArrayList<>();

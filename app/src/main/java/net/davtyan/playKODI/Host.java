@@ -28,7 +28,4 @@ public class Host implements Serializable {
         this.color = color;
         this.order = order;
     }
-
-
 }
-

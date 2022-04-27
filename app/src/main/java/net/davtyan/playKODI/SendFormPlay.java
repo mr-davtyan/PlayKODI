@@ -1,6 +1,12 @@
 package net.davtyan.playKODI;
 
 import static android.content.ClipData.newPlainText;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
+import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+import static net.davtyan.playKODI.Util.extractYTId;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -11,34 +17,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
-
-import com.google.gson.Gson;
 
 public class SendFormPlay extends Activity implements AsyncResponse {
-
-    private static String extractYTId(String ytUrl) {
-        String vId = "";
-        Pattern pattern = Pattern.compile(".*(?:youtu.be/|v/|u/\\w/|embed/|watch\\?v=)([^#&?]*).*");
-        Matcher matcher = pattern.matcher(ytUrl);
-        if (matcher.matches()) {
-            vId = matcher.group(1);
-        }
-        return vId;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+import static net.davtyan.playKODI.Util.extractYTId;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -23,20 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SendFormQueue extends Activity implements AsyncResponse {
-
-    private static String extractYTId(String ytUrl) {
-        String vId = "";
-        Pattern pattern = Pattern.compile(".*(?:youtu.be/|v/|u/\\w/|embed/|watch\\?v=)([^#&?]*).*");
-        Matcher matcher = pattern.matcher(ytUrl);
-        if (matcher.matches()) {
-            vId = matcher.group(1);
-        }
-        return vId;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
