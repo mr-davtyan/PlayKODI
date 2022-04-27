@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class HostsListDialog extends AppCompatActivity  implements AsyncResponse {
+public class HostsListDialog extends AppCompatActivity implements AsyncResponse {
     static final String APP_PREFERENCES = "MySettings";
     static final String APP_PREFERENCES_THEME_DARK = "Theme"; //
     static final String APP_PREFERENCES_THEME_DARK_AUTO = "AutoTheme"; //
@@ -68,7 +68,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
 
         updateAdapter();
 
-        if (hosts.size()==1){
+        if (hosts.size() == 1) {
             Intent intent = getIntent();
             intent.putExtra("position", 0);
             playLink(intent);
@@ -112,7 +112,7 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
         });
     }
 
-    public void playLink(Intent intent){
+    public void playLink(Intent intent) {
         int position = intent.getExtras().getInt("position");
         String textToPaste = intent.getExtras().getString("link");
         String[] requestParams = new String[10];
@@ -124,9 +124,11 @@ public class HostsListDialog extends AppCompatActivity  implements AsyncResponse
         requestParams[4] = textToPaste;
 
         String event = intent.getExtras().getString("event");
-        if (event.equalsIgnoreCase("YOUTUBE")){
+        if (event.equalsIgnoreCase("YOUTUBE")) {
             requestParams[5] = "OPEN";
-        }else{
+        } else if (event.equalsIgnoreCase("YOUTUBEADD")) {
+            requestParams[5] = "ADD";
+        } else {
             requestParams[5] = event;
             //coping to clipboard
             if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {

@@ -50,7 +50,6 @@ class MakeRequest extends AsyncTask<String, Integer, String> {
             return response;
         }
         try {
-
             URL urlUrl = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) urlUrl.openConnection();
             connection.setDoInput(true);

@@ -106,6 +106,26 @@
             android:theme="@style/Theme.Transparent"
             android:exported="true">
             <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="smb" />
+                <data android:scheme="content" />
+                <data android:mimeType="video/mpeg" />
+                <data android:mimeType="video/mp4" />
+                <data android:mimeType="video/avi" />
+                <data android:mimeType="video/quicktime" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -122,9 +142,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SendFormPlayYoutube"
+            android:name=".SendFormQueue"
             android:launchMode="singleTask"
-            android:label="@string/activitySendPlayYoutube"
+            android:label="@string/activitySendQueue"
             android:theme="@style/Theme.Transparent"
             android:exported="true">
             <intent-filter>
@@ -133,24 +153,20 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data android:host="youtube.com" />
-                <data android:host="www.youtube.com" />
-                <data android:host="m.youtube.com" />
-                <data android:host="youtu.be" />
-                <data android:pathPattern=".*" />
+                <data android:scheme="smb" />
+                <data android:scheme="content" />
+                <data android:mimeType="video/mpeg" />
+                <data android:mimeType="video/mp4" />
+                <data android:mimeType="video/avi" />
+                <data android:mimeType="video/quicktime" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".SendFormQueue"
-            android:launchMode="singleTask"
-            android:label="@string/activitySendQueue"
-            android:theme="@style/Theme.Transparent"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

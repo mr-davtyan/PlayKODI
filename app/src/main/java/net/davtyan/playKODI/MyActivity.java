@@ -216,8 +216,6 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
 
         spinnerDefaultHost = findViewById(R.id.spinnerDefaultHost);
 
-
-
         List<String> spinnerItems = new ArrayList<>();
         List<String> colorCodes = new ArrayList<>();
         List<String> hostFullAddress = new ArrayList<>();
