@@ -1,16 +1,14 @@
 package net.davtyan.playKODI;
 
-import static android.content.ClipData.newPlainText;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
-import static net.davtyan.playKODI.Util.extractYTId;
+import static net.davtyan.playKODI.Util.preExecuteMessage;
+import static net.davtyan.playKODI.Util.prepareLink;
+import static net.davtyan.playKODI.Util.prepareRequestParams;
 
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,14 +17,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class SendFormPlay extends Activity implements AsyncResponse {
+
+    public String setupEvent() {
+        return "OPEN";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,160 +36,64 @@ public class SendFormPlay extends Activity implements AsyncResponse {
         SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         MyActivity.convertHostToList(mSettings);
 
+        Gson gson = new Gson();
+        String json = mSettings.getString("hosts", "");
+        List<Host> hosts = new ArrayList<>();
+        if (!json.equalsIgnoreCase("")) {
+            hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
+        }
+        if (hosts.size() == 0) {
+            Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(SendFormPlay.this, Hosts.class));
+            finish();
+        }
+        List<String> hostFullAddress = new ArrayList<>();
+        for (Host host : hosts) {
+            hostFullAddress.add(host.host + ":" + host.port);
+        }
+        int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
+        boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+
+        String event = setupEvent();
+
         String textToPaste = "";
 
-        try {           //extract the link
+        //extract the link
+        try {
             textToPaste = Objects.requireNonNull(intent.getData()).toString();
-
-            if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clip = newPlainText("label", textToPaste);
-                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
-            }
-
-        } catch (Exception e) {
+        } catch (Exception e1) {
             try {
-
                 ClipData clip = intent.getClipData();
-                //copy the link from the clipboard
                 textToPaste = Objects.requireNonNull(clip).getItemAt(0).coerceToText(this).toString();
-
-                if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-                    //coping to clipboard
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    Objects.requireNonNull(clipboard).setPrimaryClip(clip);
-                }
-
-            } catch (Exception e1) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.messageLinkHaveWhitespace), Toast.LENGTH_SHORT).show();
-                e1.printStackTrace();
-                finish();
+            }catch (Exception e2) {
+                e2.printStackTrace();
             }
         }
 
-        if (textToPaste.contains("%")) {
-            try {
-                textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                if (textToPaste.contains("%")) {
-                    textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-        if (textToPaste.contains("smb:")) {
-            textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
-            if (textToPaste.contains("?")) {
-                textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
-            }
+        if (textToPaste.equals("")) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.messageLinkHaveWhitespace), Toast.LENGTH_SHORT).show();
+            finish();
         }
 
-        if (textToPaste.contains("youtu")) { //если ссылка из ютуба- продолжаем
+        textToPaste = prepareLink(textToPaste);
 
-            String youtubeId = extractYTId(textToPaste);    // парсим youtube id
-
-            String textToPastePlugin = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
-
-            Gson gson = new Gson();
-            String json = mSettings.getString("hosts", "");
-            List<Host> hosts = new ArrayList<>();
-            if (!json.equalsIgnoreCase("")) {
-                hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
-            }
-            if (hosts.size() == 0) {
-                Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SendFormPlay.this, Hosts.class));
-                finish();
-            }
-
-            String[] requestParams = new String[10];
-
-            List<String> hostFullAddress = new ArrayList<>();
-            for (Host host : hosts) {
-                hostFullAddress.add(host.host + ":" + host.port);
-            }
-            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
-            boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
-
-            if (!useDefaultHost || hostId < 0) {
-                Intent intentHostsList = new Intent(SendFormPlay.this, HostsListDialog.class);
-                intentHostsList.putExtra("link", textToPastePlugin);
-                intentHostsList.putExtra("event", "YOUTUBE");
-                startActivity(intentHostsList);
-            } else {
-                requestParams[0] = hosts.get(hostId).host;
-                requestParams[1] = hosts.get(hostId).port;
-                requestParams[2] = hosts.get(hostId).login;
-                requestParams[3] = hosts.get(hostId).password;
-                requestParams[4] = textToPastePlugin;
-                requestParams[5] = "OPEN";
-
-                String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
-                if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
-                Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.messageSendingLink) + " " + fullName,
-                        Toast.LENGTH_SHORT).show();
-
-                //send request to play
-                MakeRequest myMakeRequest = new MakeRequest();
-                myMakeRequest.execute(requestParams);
-                myMakeRequest.delegate = this;
-            }
+        if (!useDefaultHost || hostId < 0) {
+            Intent intentHostsList = new Intent(SendFormPlay.this, HostsListDialog.class);
+            intentHostsList.putExtra("link", textToPaste);
+            intentHostsList.putExtra("event", event);
+            startActivity(intentHostsList);
         } else {
-            Gson gson = new Gson();
-            String json = mSettings.getString("hosts", "");
-            List<Host> hosts = new ArrayList<>();
-            if (!json.equalsIgnoreCase("")) {
-                hosts.addAll(Arrays.asList(gson.fromJson(json, Host[].class)));
-            }
-            if (hosts.size() == 0) {
-                Toast.makeText(this, R.string.please_add_one_host, Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SendFormPlay.this, Hosts.class));
-                finish();
-            }
-            String[] requestParams = new String[10];
+            String[] requestParams = prepareRequestParams(textToPaste, hosts, hostId);
+            requestParams[5] = event;
 
-            List<String> hostFullAddress = new ArrayList<>();
-            for (Host host : hosts) {
-                hostFullAddress.add(host.host + ":" + host.port);
-            }
-            int hostId = hostFullAddress.indexOf(mSettings.getString(APP_PREFERENCES_DEFAULT_HOST, ""));
-            boolean useDefaultHost = mSettings.getBoolean(APP_PREFERENCES_USE_DEFAULT_HOST, false);
+            preExecuteMessage(mSettings, getSystemService(CLIPBOARD_SERVICE), textToPaste, hosts,
+                    hostId, getResources(), getApplicationContext());
 
-            if (!useDefaultHost || hostId < 0) {
-                Intent intentHostsList = new Intent(SendFormPlay.this, HostsListDialog.class);
-                intentHostsList.putExtra("link", textToPaste);
-                intentHostsList.putExtra("event", "OPEN");
-                startActivity(intentHostsList);
-            } else {
-                requestParams[0] = hosts.get(hostId).host;
-                requestParams[1] = hosts.get(hostId).port;
-                requestParams[2] = hosts.get(hostId).login;
-                requestParams[3] = hosts.get(hostId).password;
-                requestParams[4] = textToPaste;
-                requestParams[5] = "OPEN";
+            //send request to play
+            MakeRequest myMakeRequest = new MakeRequest();
+            myMakeRequest.execute(requestParams);
+            myMakeRequest.delegate = this;
 
-                //coping to clipboard
-                if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("label", textToPaste);
-                    Objects.requireNonNull(clipboard).setPrimaryClip(clip);
-                }
-
-                String fullName = hosts.get(hostId).host + ":" + hosts.get(hostId).port;
-                if (!hosts.get(hostId).nickName.equals("")) fullName = hosts.get(hostId).nickName;
-                String toastMessage = getResources().getString(R.string.messageSendingLink) + " " + fullName;
-                //preview the link
-                if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-                    toastMessage = toastMessage + "\n" + textToPaste;
-                }
-                Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
-
-                //send request to play
-                MakeRequest myMakeRequest = new MakeRequest();
-                myMakeRequest.execute(requestParams);
-                myMakeRequest.delegate = this;
-            }
         }
         finish();
     }

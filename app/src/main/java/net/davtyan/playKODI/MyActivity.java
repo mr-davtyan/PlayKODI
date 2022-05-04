@@ -5,7 +5,8 @@ import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_THEME_DARK_AUTO;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
-import static net.davtyan.playKODI.Util.extractYTId;
+import static net.davtyan.playKODI.Util.prepareLink;
+import static net.davtyan.playKODI.Util.prepareRequestParams;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +30,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,35 +94,10 @@ public class MyActivity extends AppCompatActivity implements AsyncResponse {
             mySnackbar.setText(getResources().getString(R.string.messageLinkHaveWhitespace)).show();
             return;
         }
-        if (textToPaste.contains("youtu")) {
-            String youtubeId = extractYTId(textToPaste);
-            textToPaste = "plugin://plugin.video.youtube/play/?video_id=" + youtubeId;
-        }
 
-//      making smb link
-        if (textToPaste.contains("%")) {
-            try {
-                textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                if (textToPaste.contains("%")) {
-                    textToPaste = URLDecoder.decode(textToPaste, "UTF-8");
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-        if (textToPaste.contains("smb:")) {
-            textToPaste = textToPaste.substring(textToPaste.indexOf("smb:"));
-            if (textToPaste.contains("?")) {
-                textToPaste = textToPaste.substring(0, textToPaste.indexOf("?"));
-            }
-        }
+        textToPaste = prepareLink(textToPaste);
 
-        String[] requestParams = new String[10];
-        requestParams[0] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).host;
-        requestParams[1] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).port;
-        requestParams[2] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).login;
-        requestParams[3] = hosts.get(spinnerDefaultHost.getSelectedItemPosition()).password;
-        requestParams[4] = textToPaste;
+        String[] requestParams = prepareRequestParams(textToPaste, hosts, spinnerDefaultHost.getSelectedItemPosition());
 
         if (id == R.id.buttonSendToKodi) {
             requestParams[5] = "OPEN";

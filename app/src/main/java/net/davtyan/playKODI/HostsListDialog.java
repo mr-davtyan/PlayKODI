@@ -1,13 +1,11 @@
 package net.davtyan.playKODI;
 
 
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_COPY_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_DEFAULT_HOST;
-import static net.davtyan.playKODI.Settings.APP_PREFERENCES_PREVIEW_LINKS;
 import static net.davtyan.playKODI.Settings.APP_PREFERENCES_USE_DEFAULT_HOST;
+import static net.davtyan.playKODI.Util.preExecuteMessage;
+import static net.davtyan.playKODI.Util.prepareRequestParams;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,7 +23,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 
 public class HostsListDialog extends AppCompatActivity implements AsyncResponse {
@@ -115,37 +112,13 @@ public class HostsListDialog extends AppCompatActivity implements AsyncResponse 
     public void playLink(Intent intent) {
         int position = intent.getExtras().getInt("position");
         String textToPaste = intent.getExtras().getString("link");
-        String[] requestParams = new String[10];
-
-        requestParams[0] = hosts.get(position).host;
-        requestParams[1] = hosts.get(position).port;
-        requestParams[2] = hosts.get(position).login;
-        requestParams[3] = hosts.get(position).password;
-        requestParams[4] = textToPaste;
-
         String event = intent.getExtras().getString("event");
-        if (event.equalsIgnoreCase("YOUTUBE")) {
-            requestParams[5] = "OPEN";
-        } else if (event.equalsIgnoreCase("YOUTUBEADD")) {
-            requestParams[5] = "ADD";
-        } else {
-            requestParams[5] = event;
-            //coping to clipboard
-            if (mSettings.getBoolean(APP_PREFERENCES_COPY_LINKS, false)) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("label", textToPaste);
-                Objects.requireNonNull(clipboard).setPrimaryClip(clip);
-            }
 
-            String fullName = hosts.get(position).host + ":" + hosts.get(position).port;
-            if (!hosts.get(position).nickName.equals("")) fullName = hosts.get(position).nickName;
-            String toastMessage = getResources().getString(R.string.messageSendingLink) + " " + fullName;
-            //preview the link
-            if (mSettings.getBoolean(APP_PREFERENCES_PREVIEW_LINKS, false)) {
-                toastMessage = toastMessage + "\n" + textToPaste;
-            }
-            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
-        }
+        String[] requestParams = prepareRequestParams(textToPaste, hosts, position);
+        requestParams[5] = event;
+
+        preExecuteMessage(mSettings, getSystemService(CLIPBOARD_SERVICE), textToPaste, hosts,
+                position, getResources(), getApplicationContext());
 
         //send request to play
         MakeRequest myMakeRequest = new MakeRequest();
