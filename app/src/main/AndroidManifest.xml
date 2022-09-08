@@ -30,6 +30,7 @@
             android:name=".Settings"
             android:launchMode="singleTask"
             android:label="@string/activitySettings"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -45,6 +46,7 @@
             android:name=".Hosts"
             android:launchMode="singleTask"
             android:label="@string/hosts"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -60,6 +62,7 @@
             android:name=".HostEditor"
             android:launchMode="singleTask"
             android:label="KODI"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -74,6 +77,7 @@
         <activity
             android:name=".HostsListDialog"
             android:launchMode="singleTask"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -88,6 +92,7 @@
         <activity
             android:name=".About"
             android:launchMode="singleTask"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -104,6 +109,7 @@
             android:launchMode="singleTask"
             android:label="@string/activitySendPlay"
             android:theme="@style/Theme.Transparent"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -146,6 +152,7 @@
             android:launchMode="singleTask"
             android:label="@string/activitySendQueue"
             android:theme="@style/Theme.Transparent"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

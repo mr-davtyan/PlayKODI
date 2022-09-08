@@ -56,6 +56,12 @@ public class About extends Activity {
         textVersion.setText(textVersionToPaste); // insert text version
     }
 
+    @Override
+    public void onPause() { // Back button
+        super.onPause();
+        this.finish();
+    }
+
     public void onClick(View view) {
         if (view.getId() == R.id.buttonCloseAbout) { // exit button
             finish();

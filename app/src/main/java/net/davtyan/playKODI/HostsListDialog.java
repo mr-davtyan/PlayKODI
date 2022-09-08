@@ -162,32 +162,20 @@ public class HostsListDialog extends AppCompatActivity implements AsyncResponse 
 
     public void onClick(View view) {
         int id = view.getId();
-
-        if (id == R.id.buttonAddHost) {
-            Intent intentHostEditor = new Intent(HostsListDialog.this, HostEditor.class);
-            if (hosts == null || hosts.size() == 0) {
-                intentHostEditor.putExtra("ID", 0);
-            } else {
-                intentHostEditor.putExtra("ID", hosts.size());
-            }
-            startActivity(intentHostEditor);
-
-        } else if (id == R.id.buttonCloseHostList) {
-            if (hosts.size() > 0) {
-                Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
-                startActivity(intentMyActivity);
-            }
+        if (id == R.id.buttonCloseHostList) {
             finish();
         }
 
     }
 
     public void onBackPressed() { // Back button
-        if (hosts.size() > 0) {
-            Intent intentMyActivity = new Intent(HostsListDialog.this, MyActivity.class);
-            startActivity(intentMyActivity);
-        }
         finish();
+    }
+
+    @Override
+    public void onPause() { // Back button
+        super.onPause();
+        this.finish();
     }
 
     @Override
